@@ -1,19 +1,26 @@
 package com.holomentor.holomentor.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.io.Serial;
+import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
-    private Serial id;
+    @Id
+    @Column(insertable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(insertable = false, updatable = false)
+    private String created_at;
+
     private String first_name;
     private String last_name;
     private String email;
     private String password;
-    private String created_at;
 }
