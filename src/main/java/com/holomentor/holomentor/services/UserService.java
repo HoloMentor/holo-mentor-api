@@ -1,16 +1,15 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.user.UserCreateDTO;
+import com.holomentor.holomentor.dto.user.UserLoginDTO;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.BcryptHash;
-import com.password4j.BcryptFunction;
-import com.password4j.Hash;
-import com.password4j.Password;
-import com.password4j.types.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,5 +32,22 @@ public class UserService {
         } catch (Exception e) {
             throw new Error("failed to register user");
         }
+    }
+
+    public String login(UserLoginDTO request){
+
+        Optional<User>  TempUser = userRepository.findByEmail(request.getUsername());
+        if(TempUser.isEmpty()){
+            throw new IllegalStateException("Email not exist");
+        }
+
+        User user = TempUser.get();
+        BcryptHash bcryptHash = new BcryptHash(request.getPassword());
+
+        if(!bcryptHash.verify(user.getPassword()))
+        {
+            throw new IllegalStateException("Invalid password");
+        }
+        return "login success";
     }
 }

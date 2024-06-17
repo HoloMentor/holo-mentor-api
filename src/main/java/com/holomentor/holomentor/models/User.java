@@ -2,6 +2,7 @@ package com.holomentor.holomentor.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,4 +22,5 @@ public class User {
     private String last_name;
     private String email;
     private String password;
+
 }
