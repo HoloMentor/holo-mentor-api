@@ -3,6 +3,7 @@ package com.holomentor.holomentor.controllers;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,5 +21,10 @@ public class UserController {
     @GetMapping("/get")
     public String get() {
         return "user";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody User user ){
+        return "success";
     }
 }
