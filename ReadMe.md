@@ -25,6 +25,8 @@ The following guides illustrate how to use some features concretely:
 
 Create `env.properties` file in the root of the project
 
+NOTE: The is required only if you are deploying the database locally
+
 ```env
 DB_DATABASE=holomentor_db
 DB_USER=postgres
