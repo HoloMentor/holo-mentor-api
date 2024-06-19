@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: holomentor_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/holomentor_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
+  db:
+    container_name: holomentor_db
+    image: postgres
+    ports:
+      - "5000:5432"
+    environment:
+      - POSTGRES_DB=holomentor_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
