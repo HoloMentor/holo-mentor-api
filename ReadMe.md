@@ -1,25 +1,4 @@
-# Getting Started
-
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.3.0/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.3.0/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.0/reference/htmlsingle/index.html#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.3.0/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data)
-* [Spring Security](https://docs.spring.io/spring-boot/docs/3.3.0/reference/htmlsingle/index.html#web.security)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
+# HoloMentor API
 
 ### Prerequisite
 
@@ -33,3 +12,32 @@ DB_USER=postgres
 DB_PASSWORD=1234
 ```
 
+# Naming Conventions
+All branch descriptors should be in lowercase and separated by hyphens.
+
+## Main Branch
+* Convention: Named simply as "main".
+* Description: The main branch contains production-ready code and serves as the primary branch for release deployments.
+
+## Development Branch (DEV)
+* Convention: Prefixed with "dev/" followed by a brief descriptor.
+* Description: The development branch, labeled with the "DEV" prefix, is where ongoing work and feature development take place. It serves as the basis for creating feature branches.
+
+## Feature Branches
+* Convention: Prefixed with "feat/" followed by a brief descriptor.
+* Description: Feature branches are created for implementing new features or enhancements in the project. They are based on the development branch.
+
+## Bug Fix Branches
+* Convention: Prefixed with "fix/" followed by a brief descriptor.
+* Description: Bug-fix branches are used to address specific issues or bugs in the project. They are based on the development branch.
+
+## Version Branches
+* Convention: Prefixed with "vX/" followed by a brief descriptor.
+* Description: Version branches are used to manage different versions of the project. They include main, stagging, and development branches for each version, facilitating version-specific development and maintenance.
+
+## Example Branches
+* Main: `main`
+* Development: `dev`
+* Feature Branch: `feat/new-feature`
+* Bug Fix Branch: `fix/issue-fix`
+* Version 1 Main: `v1/main`
