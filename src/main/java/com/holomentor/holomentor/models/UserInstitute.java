@@ -17,17 +17,20 @@ public class UserInstitute {
     private Long userId;
     @Column(name = "institute_id", nullable = false)
     private Long instituteId;
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "role", nullable = false)
+    private RoleTypes role = RoleTypes.STUDENT;
+    @Column(insertable = false, updatable = false)
+    private String createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", insertable=false, updatable=false)
     private User user;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "institute_id", insertable=false, updatable=false)
     private Institute institute;
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private RoleTypes role = RoleTypes.STUDENT;
-    @Column(insertable = false, updatable = false)
-    private String createdAt;
+
 
     public enum RoleTypes {
         STUDENT,
