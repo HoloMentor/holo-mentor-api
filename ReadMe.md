@@ -4,12 +4,19 @@
 
 Create `env.properties` file in the root of the project
 
-NOTE: The is required only if you are deploying the database locally
+NOTE: The database configurations are required only if you are deploying the database locally
 
 ```env
-DB_DATABASE=holomentor_db
+## database
 DB_USER=postgres
 DB_PASSWORD=1234
+DB_DATABASE=holomentor_db
+
+## super admin
+SUPER_ADMIN_FNAME=Super
+SUPER_ADMIN_LNAME=Admin
+SUPER_ADMIN_EMAIL=admin@holomentor.com
+SUPER_ADMIN_PASSWORD=1234
 ```
 
 # Naming Conventions

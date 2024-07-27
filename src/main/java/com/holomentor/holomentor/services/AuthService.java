@@ -1,7 +1,6 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.config.JwtGenerator;
-import com.holomentor.holomentor.dto.auth.AuthInstitutesDTO;
 import com.holomentor.holomentor.dto.auth.AuthLoginDTO;
 import com.holomentor.holomentor.dto.auth.AuthRegisterDTO;
 import com.holomentor.holomentor.models.Institute;
@@ -13,7 +12,6 @@ import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 
@@ -77,6 +74,7 @@ public class AuthService {
             user.setFirstName(env.getProperty("env.super.first_name"));
             user.setLastName(env.getProperty("env.super.last_name"));
             user.setEmail(env.getProperty("env.super.email"));
+            user.setRole(User.RoleTypes.SUPER_ADMIN);
             user.setPassword(passwordEncoder.encode(env.getProperty("env.super.password")));
             userRepository.save(user);
 
@@ -113,7 +111,9 @@ public class AuthService {
         response.addCookie(refreshCookie);
 
         Map<String,String> data = new HashMap<String, String>();
-        data.put("id", userInstitute.get().getId().toString());
+        data.put("user_institute_id", userInstitute.get().getId().toString());
+        data.put("user_id", userInstitute.get().getUser().getId().toString());
+        data.put("institute_id", userInstitute.get().getInstitute().getId().toString());
         data.put("first_name", userInstitute.get().getUser().getFirstName());
         data.put("last_name", userInstitute.get().getUser().getLastName());
         data.put("email", userInstitute.get().getUser().getEmail());
@@ -122,6 +122,25 @@ public class AuthService {
         data.put("access_token", accessToken);
 
         return Response.generate("login successful", HttpStatus.OK, data);
+    }
+
+    public ResponseEntity<Object> authorize(Long id){
+        Optional<UserInstitute> userInstitute = userInstituteRepository.findById(id);
+        if(userInstitute.isEmpty()){
+            throw new UsernameNotFoundException("user is not registered to the institute");
+        }
+
+        Map<String,String> data = new HashMap<String, String>();
+        data.put("user_institute_id", userInstitute.get().getId().toString());
+        data.put("user_id", userInstitute.get().getUser().getId().toString());
+        data.put("institute_id", userInstitute.get().getInstitute().getId().toString());
+        data.put("first_name", userInstitute.get().getUser().getFirstName());
+        data.put("last_name", userInstitute.get().getUser().getLastName());
+        data.put("email", userInstitute.get().getUser().getEmail());
+        data.put("user_role", userInstitute.get().getUser().getRole().toString());
+        data.put("institute_role", userInstitute.get().getRole().toString());
+
+        return Response.generate("user institute details found", HttpStatus.OK, data);
     }
 
     public ResponseEntity<Object> institutes(String email) {
