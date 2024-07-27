@@ -117,6 +117,8 @@ public class AuthService {
         data.put("first_name", userInstitute.get().getUser().getFirstName());
         data.put("last_name", userInstitute.get().getUser().getLastName());
         data.put("email", userInstitute.get().getUser().getEmail());
+        data.put("user_role", userInstitute.get().getUser().getRole().toString());
+        data.put("institute_role", userInstitute.get().getRole().toString());
         data.put("access_token", accessToken);
 
         return Response.generate("login successful", HttpStatus.OK, data);
@@ -141,6 +143,6 @@ public class AuthService {
             return inner;
         }));
 
-        return Response.generate("success", HttpStatus.FOUND, data);
+        return Response.generate("success", HttpStatus.OK, data);
     }
 }

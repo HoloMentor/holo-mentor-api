@@ -18,7 +18,6 @@ public class AuthUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        System.out.println(Long.parseLong(id));
         UserInstitute userInstitute = userInstituteRepository.findById(Long.parseLong(id)).orElseThrow();
 
         AuthUser authUser = new AuthUser();
@@ -30,6 +29,7 @@ public class AuthUserService implements UserDetailsService {
         authUser.setLastName(userInstitute.getUser().getLastName());
         authUser.setPassword(userInstitute.getUser().getPassword());
         authUser.setRole(String.valueOf(userInstitute.getRole()));
+        authUser.setUserRole(String.valueOf(userInstitute.getUser().getRole()));
 
         return authUser;
     }
