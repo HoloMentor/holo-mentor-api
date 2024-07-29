@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -147,7 +148,7 @@ public class AuthService {
         Optional<User> user = userRepository.findByEmail(email);
 //        check if the user exists
         if(user.isEmpty()){
-            throw new UsernameNotFoundException("user not registered to the system");
+            return Response.generate("user not registered to the system", HttpStatus.NOT_FOUND);
         }
 //        get user registered institutes
         List<UserInstitute> userInstitutes = userInstituteRepository.findByUserEmail(email);
