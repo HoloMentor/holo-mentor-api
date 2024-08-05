@@ -3,6 +3,7 @@ package com.holomentor.holomentor.config;
 import com.holomentor.holomentor.services.AuthUserService;
 import com.holomentor.holomentor.services.UserInstituteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,10 +43,12 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
                  authorize
-                    .requestMatchers("/auth/**")
-                    .permitAll()
-                    .requestMatchers("/users/**")
-                    .authenticated();
+                         .requestMatchers("/**")
+                         .permitAll()
+                         .requestMatchers("/auth/**")
+                         .permitAll()
+                         .requestMatchers("/users/**")
+                         .authenticated();
         });
 
         return http.build();
