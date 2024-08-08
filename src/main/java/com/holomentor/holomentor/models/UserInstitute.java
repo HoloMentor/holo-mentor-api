@@ -17,6 +17,7 @@ public class UserInstitute {
     private Long userId;
     @Column(name = "institute_id", nullable = false)
     private Long instituteId;
+    private Boolean isActive = false;
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "role", nullable = false)

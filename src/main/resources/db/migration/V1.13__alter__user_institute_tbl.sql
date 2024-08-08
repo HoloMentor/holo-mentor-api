@@ -1,0 +1,1 @@
+ALTER TABLE user_institutes ADD COLUMN is_active BOOLEAN DEFAULT FALSE;

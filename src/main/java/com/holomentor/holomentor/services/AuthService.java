@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.NotActiveException;
 import java.util.*;
 
 @Service
@@ -92,7 +93,7 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<Object> login(AuthLoginDTO request, HttpServletResponse response){
+    public ResponseEntity<Object> login(AuthLoginDTO request, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUserInstituteID(),
@@ -101,6 +102,10 @@ public class AuthService {
         Optional<UserInstitute> userInstitute = userInstituteRepository.findById(request.getUserInstituteID());
         if(userInstitute.isEmpty()){
             throw new UsernameNotFoundException("user is not registered to the institute");
+        }
+//        is user is not active
+        if(!userInstitute.get().getIsActive()){
+            throw new NotActiveException("user account is not active");
         }
 
         var accessToken = jwtGenerator.generateAccessToken(userInstitute.get());

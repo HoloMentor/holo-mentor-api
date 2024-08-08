@@ -13,6 +13,10 @@ public class Institute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String city;
+    private String address;
+    private String registrationNumber;
+    private String establishedDate;
     private String logo = null;
     private Boolean isBlacklisted = false;
     @Column(insertable = false, updatable = false)
