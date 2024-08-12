@@ -96,11 +96,13 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.sendgrid</groupId>
 			<artifactId>sendgrid-java</artifactId>
-			<version>4.0.1</version>
+			<version>4.10.2</version>
 		</dependency>
+
 
 	</dependencies>
 

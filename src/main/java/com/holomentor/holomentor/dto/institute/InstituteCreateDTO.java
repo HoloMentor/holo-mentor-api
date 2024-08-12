@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class InstituteCreateDTO {
     @NotNull(message = "institute name is required")
@@ -15,7 +17,7 @@ public class InstituteCreateDTO {
     @NotNull(message = "institute registration number is required")
     private String registrationNumber;
     @NotNull(message = "institute established date is required")
-    private String establishedDate;
+    private Date establishedDate;
     @NotNull(message = "admin first name is required")
     private String adminFirstName;
     @NotNull(message = "admin last name is required")

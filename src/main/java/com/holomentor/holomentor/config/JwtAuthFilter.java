@@ -1,9 +1,6 @@
 package com.holomentor.holomentor.config;
 
-import com.holomentor.holomentor.services.AuthService;
 import com.holomentor.holomentor.services.AuthUserService;
-import com.holomentor.holomentor.services.UserInstituteService;
-import com.holomentor.holomentor.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

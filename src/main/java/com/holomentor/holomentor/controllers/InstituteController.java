@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("institutes")
 public class InstituteController {
@@ -21,7 +23,7 @@ public class InstituteController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@Valid @RequestBody InstituteCreateDTO body) {
+    public ResponseEntity<Object> create(@Valid @RequestBody InstituteCreateDTO body) throws IOException {
         return instituteService.create(body);
     }
 }

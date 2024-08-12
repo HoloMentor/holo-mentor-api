@@ -17,6 +17,9 @@ SUPER_ADMIN_FNAME=Super
 SUPER_ADMIN_LNAME=Admin
 SUPER_ADMIN_EMAIL=admin@holomentor.com
 SUPER_ADMIN_PASSWORD=1234
+
+## sendgrid
+SENDGRID_API_KEY=
 ```
 
 # Naming Conventions
