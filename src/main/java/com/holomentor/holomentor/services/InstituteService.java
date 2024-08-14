@@ -1,16 +1,15 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
-import com.holomentor.holomentor.models.Institute;
-import com.holomentor.holomentor.models.SendGridMail;
-import com.holomentor.holomentor.models.User;
-import com.holomentor.holomentor.models.UserInstitute;
+import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.repositories.InstituteRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
+import com.holomentor.holomentor.repositories.UserInvitationRepository;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,24 +18,25 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
 public class InstituteService {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private UserInstituteRepository userInstituteRepository;
-
     @Autowired
     private InstituteRepository instituteRepository;
-
+    @Autowired
+    private UserInvitationRepository userInvitationRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private MailService mailService;
+    @Autowired
+    private Environment environment;
 
     public ResponseEntity<Object> create(InstituteCreateDTO body) throws IOException {
 //        create institute
@@ -59,8 +59,10 @@ public class InstituteService {
             newAdminUser.setFirstName(body.getAdminFirstName());
             newAdminUser.setLastName(body.getAdminLastName());
             newAdminUser.setEmail(body.getAdminEmail());
+
 //            create a random password
-            newAdminUser.setPassword(passwordEncoder.encode("randomPassword"));
+            String randomPassword = UUID.randomUUID().toString();
+            newAdminUser.setPassword(passwordEncoder.encode(randomPassword));
 //            create user account
             userRepository.save(newAdminUser);
 
@@ -83,9 +85,22 @@ public class InstituteService {
 
         userInstituteRepository.save(userInstitute);
 
+//        create user invitation
+        String invitationToken = UUID.randomUUID().toString();
+
+        UserInvitation invitation = new UserInvitation();
+        invitation.setToken(invitationToken);
+        invitation.setIsValid(true);
+        invitation.setUserId(adminUser.getId());
+        invitation.setInstituteId(institute.getId());
+        invitation.setUserInstituteId(userInstitute.getId());
+
+        userInvitationRepository.save(invitation);
+
 //        prepare mail dynamic data
         HashMap<String, String> dynamicData = new HashMap<String, String>();
-        dynamicData.put("redirect_link", "https://example.com");
+        String redirectLink = String.format("%s?invitation=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
+        dynamicData.put("redirect_link", redirectLink);
 
 //        send mail to the user account
         mailService.sendMail(

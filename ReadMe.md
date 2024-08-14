@@ -20,6 +20,9 @@ SUPER_ADMIN_PASSWORD=1234
 
 ## sendgrid
 SENDGRID_API_KEY=
+
+## application
+CLIENT_URL=http://localhost:3000
 ```
 
 # Naming Conventions
@@ -51,3 +54,12 @@ All branch descriptors should be in lowercase and separated by hyphens.
 * Feature Branch: `feat/new-feature`
 * Bug Fix Branch: `fix/issue-fix`
 * Version 1 Main: `v1/main`
+
+## Flyway Migrations
+
+To create new SQL script files you can use `flyway.sh` bash script file. To create a new SQL script run the below code.
+
+```bash
+# in powershell
+sh flyway.sh "alter users table"
+```

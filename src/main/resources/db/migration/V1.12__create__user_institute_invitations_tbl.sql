@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "user_invitation_tokens" (
+CREATE TABLE IF NOT EXISTS "user_invitations" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
     "institute_id" SERIAL NOT NULL,

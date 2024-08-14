@@ -3,6 +3,7 @@ package com.holomentor.holomentor.controllers;
 import com.holomentor.holomentor.dto.auth.AuthLoginDTO;
 import com.holomentor.holomentor.dto.auth.AuthRegisterDTO;
 import com.holomentor.holomentor.services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<Object> login(@RequestBody @Valid AuthLoginDTO body, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
         return authService.login(body, response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Object> refresh(HttpServletRequest body, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
+        return authService.refresh(body, response);
     }
 
     @GetMapping("/institutes/{email}")

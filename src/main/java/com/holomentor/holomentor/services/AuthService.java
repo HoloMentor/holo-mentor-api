@@ -11,6 +11,7 @@ import com.holomentor.holomentor.repositories.UserInstituteRepository;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -21,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.NotActiveException;
@@ -128,6 +130,31 @@ public class AuthService {
         data.put("access_token", accessToken);
 
         return Response.generate("login successful", HttpStatus.OK, data);
+    }
+
+    public ResponseEntity<Object> refresh(HttpServletRequest request, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
+        String refreshToken = jwtGenerator.extractFromCookies(request.getCookies(), "refreshToken");
+
+        if(refreshToken == null){
+            return Response.generate("refresh token is empty", HttpStatus.BAD_REQUEST);
+        }
+        String id = jwtGenerator.extractId(refreshToken);
+
+        Optional<UserInstitute> userInstitute = userInstituteRepository.findById(Long.valueOf(id));
+        if(userInstitute.isEmpty()){
+            throw new UsernameNotFoundException("user is not registered to the institute");
+        }
+//        is user is not active
+        if(!userInstitute.get().getIsActive()){
+            throw new NotActiveException("user account is not active");
+        }
+
+        var accessToken = jwtGenerator.generateAccessToken(userInstitute.get());
+
+        Map<String,String> data = new HashMap<String, String>();
+        data.put("access_token", accessToken);
+
+        return Response.generate("access token refreshed", HttpStatus.OK, data);
     }
 
     public ResponseEntity<Object> authorize(Long id){
