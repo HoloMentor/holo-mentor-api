@@ -13,8 +13,16 @@ public class UserInvitation {
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+    @Column(name = "institute_id", nullable = false)
     private Long instituteId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", insertable=false, updatable=false)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "institute_id", insertable=false, updatable=false)
+    private Institute institute;
     private Long userInstituteId;
     private String token;
     private Boolean isValid = false;

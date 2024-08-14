@@ -1,5 +1,6 @@
 package com.holomentor.holomentor.controllers;
 
+import com.holomentor.holomentor.dto.auth.AuthInvitationAcceptDTO;
 import com.holomentor.holomentor.dto.auth.AuthLoginDTO;
 import com.holomentor.holomentor.dto.auth.AuthRegisterDTO;
 import com.holomentor.holomentor.services.AuthService;
@@ -33,6 +34,16 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<Object> login(@RequestBody @Valid AuthLoginDTO body, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
         return authService.login(body, response);
+    }
+
+    @PostMapping("/signin/invitation")
+    public ResponseEntity<Object> invitationLogin(@RequestBody @Valid AuthInvitationAcceptDTO body, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
+        return authService.invitationLogin(body, response);
+    }
+
+    @GetMapping("/invitation/{token}")
+    public ResponseEntity<Object> invitationDetails(@PathVariable @Valid String token) {
+        return authService.invitationDetails(token);
     }
 
     @PostMapping("/refresh")

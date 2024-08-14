@@ -10,6 +10,9 @@ import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -99,7 +103,7 @@ public class InstituteService {
 
 //        prepare mail dynamic data
         HashMap<String, String> dynamicData = new HashMap<String, String>();
-        String redirectLink = String.format("%s?invitation=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
+        String redirectLink = String.format("invitation%s?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
         dynamicData.put("redirect_link", redirectLink);
 
 //        send mail to the user account
@@ -111,5 +115,16 @@ public class InstituteService {
         );
 
         return Response.generate("New institute created and admin registration mail has been sent.", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> getAll(String search, Integer page, Integer size) throws IOException {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Institute> institutes= instituteRepository.findByNameContainingIgnoreCase(search, pageable);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", institutes.getTotalPages());
+        data.put("data", institutes.getContent());
+
+        return Response.generate("All Institutes have been registered.", HttpStatus.OK, data);
     }
 }

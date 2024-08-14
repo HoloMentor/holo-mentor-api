@@ -22,6 +22,14 @@ public class InstituteController {
         return "institutes";
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAll(
+            @RequestParam(name="search", defaultValue = "") String search,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) throws IOException {
+        return instituteService.getAll(search, pageNo, pageSize);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody InstituteCreateDTO body) throws IOException {
         return instituteService.create(body);

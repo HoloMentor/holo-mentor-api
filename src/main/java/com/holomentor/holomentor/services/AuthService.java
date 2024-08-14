@@ -1,13 +1,16 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.config.JwtGenerator;
+import com.holomentor.holomentor.dto.auth.AuthInvitationAcceptDTO;
 import com.holomentor.holomentor.dto.auth.AuthLoginDTO;
 import com.holomentor.holomentor.dto.auth.AuthRegisterDTO;
 import com.holomentor.holomentor.models.Institute;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.models.UserInstitute;
+import com.holomentor.holomentor.models.UserInvitation;
 import com.holomentor.holomentor.repositories.InstituteRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
+import com.holomentor.holomentor.repositories.UserInvitationRepository;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.servlet.http.Cookie;
@@ -22,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,6 +48,8 @@ public class AuthService {
     private Environment env;
     @Autowired
     private InstituteRepository instituteRepository;
+    @Autowired
+    private UserInvitationRepository userInvitationRepository;
 
     public ResponseEntity<Object> create(AuthRegisterDTO userDTO) {
         try {
@@ -101,33 +107,97 @@ public class AuthService {
                         request.getUserInstituteID(),
                         request.getPassword()));
 
-        Optional<UserInstitute> userInstitute = userInstituteRepository.findById(request.getUserInstituteID());
-        if(userInstitute.isEmpty()){
+        Optional<UserInstitute> userInstituteResult = userInstituteRepository.findById(request.getUserInstituteID());
+        if(userInstituteResult.isEmpty()){
             throw new UsernameNotFoundException("user is not registered to the institute");
         }
+
+        UserInstitute userInstitute = userInstituteResult.get();
 //        is user is not active
-        if(!userInstitute.get().getIsActive()){
+        if(!userInstitute.getIsActive()){
             throw new NotActiveException("user account is not active");
         }
 
-        var accessToken = jwtGenerator.generateAccessToken(userInstitute.get());
-        var refreshToken = jwtGenerator.generateRefreshToken(userInstitute.get());
+//        generate jwt tokens for the user
+        Map<String, String> data = this.tokenAuthorizeUser(userInstitute);
 
 //        set refresh token cookie
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        Cookie refreshCookie = new Cookie("refreshToken", data.get("refresh_token"));
         refreshCookie.setHttpOnly(true);
         response.addCookie(refreshCookie);
 
-        Map<String,String> data = new HashMap<String, String>();
-        data.put("user_institute_id", userInstitute.get().getId().toString());
-        data.put("user_id", userInstitute.get().getUser().getId().toString());
-        data.put("institute_id", userInstitute.get().getInstitute().getId().toString());
-        data.put("first_name", userInstitute.get().getUser().getFirstName());
-        data.put("last_name", userInstitute.get().getUser().getLastName());
-        data.put("email", userInstitute.get().getUser().getEmail());
-        data.put("user_role", userInstitute.get().getUser().getRole().toString());
-        data.put("institute_role", userInstitute.get().getRole().toString());
-        data.put("access_token", accessToken);
+//        remove refresh token
+        data.remove("refresh_token");
+
+        return Response.generate("login successful", HttpStatus.OK, data);
+    }
+
+    public ResponseEntity<Object> invitationDetails(String token) {
+        Optional<UserInvitation> userInvitationResult =  userInvitationRepository.findByTokenAndIsValid(token, true);
+        if(userInvitationResult.isEmpty()){
+            return Response.generate("inviation token not found", HttpStatus.NOT_FOUND);
+        }
+        UserInvitation userInvitation = userInvitationResult.get();
+
+        Map<String, String> data = new HashMap<>();
+        data.put("id", userInvitation.getId().toString());
+        data.put("email", userInvitation.getUser().getEmail());
+        data.put("institute_name", userInvitation.getInstitute().getName());
+
+        return Response.generate("invitation details found", HttpStatus.OK, data);
+    }
+
+    @Transactional
+    public ResponseEntity<Object> invitationLogin(AuthInvitationAcceptDTO request, HttpServletResponse response) throws UsernameNotFoundException, NotActiveException {
+//        check if a valid user invitation is found
+        Optional<UserInvitation> userInvitationResult =  userInvitationRepository.findByTokenAndIsValid(request.getToken(), true);
+        if(userInvitationResult.isEmpty()){
+            return Response.generate("inviation token not found", HttpStatus.NOT_FOUND);
+        }
+        UserInvitation userInvitation = userInvitationResult.get();
+
+//        update invitation validity
+        userInvitation.setIsValid(false);
+        userInvitationRepository.save(userInvitation);
+
+//        fetch user
+        Optional<User> userResult = userRepository.findById(userInvitation.getUserId());
+        if(userResult.isEmpty()) {
+            return Response.generate("user not found", HttpStatus.NOT_FOUND);
+        }
+        User user = userResult.get();
+
+//        if it's a new user reset password
+        if(request.getReset()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(user);
+        }
+
+        Optional<UserInstitute> userInstituteResult = userInstituteRepository.findById(userInvitation.getUserInstituteId());
+        if(userInstituteResult.isEmpty()){
+            throw new UsernameNotFoundException("user is not registered to the institute");
+        }
+        UserInstitute userInstitute = userInstituteResult.get();
+
+//        update user institute active state
+        userInstitute.setIsActive(true);
+        userInstituteRepository.save(userInstitute);
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userInvitation.getUserInstituteId(),
+                        request.getPassword()));
+
+//        generate jwt tokens for the user
+        Map<String, String> data = this.tokenAuthorizeUser(userInstitute);
+
+//        set refresh token cookie
+        Cookie refreshCookie = new Cookie("refreshToken", data.get("refresh_token"));
+        refreshCookie.setHttpOnly(true);
+        response.addCookie(refreshCookie);
+
+//        remove refresh token
+        data.remove("refresh_token");
 
         return Response.generate("login successful", HttpStatus.OK, data);
     }
@@ -151,7 +221,7 @@ public class AuthService {
 
         var accessToken = jwtGenerator.generateAccessToken(userInstitute.get());
 
-        Map<String,String> data = new HashMap<String, String>();
+        Map<String,String> data = new HashMap<>();
         data.put("access_token", accessToken);
 
         return Response.generate("access token refreshed", HttpStatus.OK, data);
@@ -163,15 +233,7 @@ public class AuthService {
             throw new UsernameNotFoundException("user is not registered to the institute");
         }
 
-        Map<String,String> data = new HashMap<String, String>();
-        data.put("user_institute_id", userInstitute.get().getId().toString());
-        data.put("user_id", userInstitute.get().getUser().getId().toString());
-        data.put("institute_id", userInstitute.get().getInstitute().getId().toString());
-        data.put("first_name", userInstitute.get().getUser().getFirstName());
-        data.put("last_name", userInstitute.get().getUser().getLastName());
-        data.put("email", userInstitute.get().getUser().getEmail());
-        data.put("user_role", userInstitute.get().getUser().getRole().toString());
-        data.put("institute_role", userInstitute.get().getRole().toString());
+        Map<String,String> data = this.prepareUserData(userInstitute.get());
 
         return Response.generate("user institute details found", HttpStatus.OK, data);
     }
@@ -196,5 +258,30 @@ public class AuthService {
         }));
 
         return Response.generate("success", HttpStatus.OK, data);
+    }
+
+    private Map<String, String> tokenAuthorizeUser(UserInstitute userInstitute) {
+        var accessToken = jwtGenerator.generateAccessToken(userInstitute);
+        var refreshToken = jwtGenerator.generateRefreshToken(userInstitute);
+
+        Map<String,String> data = this.prepareUserData(userInstitute);
+        data.put("access_token", accessToken);
+        data.put("refresh_token", refreshToken);
+
+        return data;
+    }
+
+    private Map<String, String> prepareUserData(UserInstitute userInstitute) {
+        Map<String,String> data = new HashMap<>();
+        data.put("user_institute_id", userInstitute.getId().toString());
+        data.put("user_id", userInstitute.getUser().getId().toString());
+        data.put("institute_id", userInstitute.getInstitute().getId().toString());
+        data.put("first_name", userInstitute.getUser().getFirstName());
+        data.put("last_name", userInstitute.getUser().getLastName());
+        data.put("email", userInstitute.getUser().getEmail());
+        data.put("user_role", userInstitute.getUser().getRole().toString());
+        data.put("institute_role", userInstitute.getRole().toString());
+
+        return data;
     }
 }
