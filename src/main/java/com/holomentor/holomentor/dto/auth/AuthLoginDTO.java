@@ -2,6 +2,7 @@ package com.holomentor.holomentor.dto.auth;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 @Data
 public class AuthLoginDTO {

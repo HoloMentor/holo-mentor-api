@@ -4,12 +4,25 @@
 
 Create `env.properties` file in the root of the project
 
-NOTE: The is required only if you are deploying the database locally
+NOTE: The database configurations are required only if you are deploying the database locally
 
 ```env
-DB_DATABASE=holomentor_db
+## database
 DB_USER=postgres
 DB_PASSWORD=1234
+DB_DATABASE=holomentor_db
+
+## super admin
+SUPER_ADMIN_FNAME=Super
+SUPER_ADMIN_LNAME=Admin
+SUPER_ADMIN_EMAIL=admin@holomentor.com
+SUPER_ADMIN_PASSWORD=1234
+
+## sendgrid
+SENDGRID_API_KEY=
+
+## application
+CLIENT_URL=http://localhost:3000
 ```
 
 # Naming Conventions
@@ -41,3 +54,12 @@ All branch descriptors should be in lowercase and separated by hyphens.
 * Feature Branch: `feat/new-feature`
 * Bug Fix Branch: `fix/issue-fix`
 * Version 1 Main: `v1/main`
+
+## Flyway Migrations
+
+To create new SQL script files you can use `flyway.sh` bash script file. To create a new SQL script run the below code.
+
+```bash
+# in powershell
+sh flyway.sh "alter users table"
+```
