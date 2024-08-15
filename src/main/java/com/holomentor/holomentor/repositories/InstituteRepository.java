@@ -13,5 +13,5 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface InstituteRepository extends JpaRepository<Institute, Long> {
-    Page<Institute> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Institute> findByNameContainingIgnoreCaseAndIsDeleted(String name, Boolean isDeleted, Pageable pageable);
 }
