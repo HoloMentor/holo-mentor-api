@@ -22,6 +22,7 @@ public class Institute {
     private Date establishedDate;
     private String logo = null;
     private Boolean isBlacklisted = false;
+    private Boolean isDeleted = false;
     @Column(insertable = false, updatable = false)
     private String createdAt;
 

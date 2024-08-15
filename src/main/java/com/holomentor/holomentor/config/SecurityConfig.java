@@ -48,6 +48,8 @@ public class SecurityConfig {
                          .requestMatchers("/auth/**")
                          .permitAll()
                          .requestMatchers("/users/**")
+                         .authenticated()
+                         .requestMatchers("/institutes/**")
                          .authenticated();
         });
 

@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
+import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.repositories.InstituteRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
@@ -117,14 +118,51 @@ public class InstituteService {
         return Response.generate("New institute created and admin registration mail has been sent.", HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getAll(String search, Integer page, Integer size) throws IOException {
+    public ResponseEntity<Object> get(Long id) {
+        Optional<Institute> institute = instituteRepository.findById(id);
+        if (institute.isEmpty()) {
+            return Response.generate("institute details not found", HttpStatus.NOT_FOUND);
+        }
+
+        return Response.generate("institute details found", HttpStatus.OK, institute);
+    }
+
+    public ResponseEntity<Object> getAll(String search, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Institute> institutes= instituteRepository.findByNameContainingIgnoreCase(search, pageable);
+        Page<Institute> institutes= instituteRepository.findByNameContainingIgnoreCaseAndIsDeleted(search, false, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", institutes.getTotalPages());
         data.put("data", institutes.getContent());
 
-        return Response.generate("All Institutes have been registered.", HttpStatus.OK, data);
+        return Response.generate("all institutes have been registered.", HttpStatus.OK, data);
+    }
+
+    public ResponseEntity<Object> delete(Long id) {
+        Optional<Institute> instituteResult = instituteRepository.findById(id);
+        if (instituteResult.isEmpty()) {
+            return Response.generate("institute details not found", HttpStatus.NOT_FOUND);
+        }
+        Institute institute = instituteResult.get();
+        institute.setIsDeleted(true);
+
+        instituteRepository.save(institute);
+        return Response.generate("institute details have been deleted.", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> update(Long id, InstituteUpdateDTO body) {
+        Optional<Institute> instituteResult = instituteRepository.findById(id);
+        if (instituteResult.isEmpty()) {
+            return Response.generate("institute details not found", HttpStatus.NOT_FOUND);
+        }
+        Institute institute = instituteResult.get();
+        institute.setName(body.getName());
+        institute.setCity(body.getCity());
+        institute.setAddress(body.getAddress());
+        institute.setRegistrationNumber(body.getRegistrationNumber());
+        institute.setEstablishedDate(body.getEstablishedDate());
+
+        instituteRepository.save(institute);
+        return Response.generate("institute details have been updated.", HttpStatus.OK);
     }
 }
