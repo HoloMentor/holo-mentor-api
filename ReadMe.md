@@ -23,6 +23,7 @@ SENDGRID_API_KEY=
 
 ## application
 CLIENT_URL=http://localhost:3000
+API_URL=http://localhost:8080
 ```
 
 # Naming Conventions
