@@ -28,6 +28,9 @@ public class User {
     private String email;
     private String password;
     private String image;
+    private String country;
+    private String countryCode;
+    private String contactNumber;
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private RoleTypes role = RoleTypes.USER;

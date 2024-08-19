@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.controllers;
 
 import com.holomentor.holomentor.dto.user.UserUpdateDTO;
+import com.holomentor.holomentor.dto.user.UserUpdateInfoDTO;
 import com.holomentor.holomentor.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,13 @@ public class UserController {
         return userService.get(id);
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<Object> update(@PathVariable @Valid Long id, @RequestBody @Valid UserUpdateDTO body) {
-        return userService.update(id, body);
+    @PatchMapping("/update/user/{id}")
+    public ResponseEntity<Object> updateUser(@PathVariable @Valid Long id, @RequestBody @Valid UserUpdateDTO body) {
+        return userService.updateUser(id, body);
+    }
+
+    @PatchMapping("/update/info/{id}")
+    public ResponseEntity<Object> updateInfo(@PathVariable @Valid Long id, @RequestBody @Valid UserUpdateInfoDTO body) {
+        return userService.updateInfo(id, body);
     }
 }

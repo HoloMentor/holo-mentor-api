@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.user.UserUpdateDTO;
+import com.holomentor.holomentor.dto.user.UserUpdateInfoDTO;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
@@ -27,7 +28,7 @@ public class UserService {
         return Response.generate("user details found", HttpStatus.OK, user.get());
     }
 
-    public ResponseEntity<Object> update(Long id, UserUpdateDTO body) {
+    public ResponseEntity<Object> updateUser(Long id, UserUpdateDTO body) {
         Optional<User> userResult = userRepository.findById(id);
 
         if(userResult.isEmpty()) {
@@ -38,6 +39,23 @@ public class UserService {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
         user.setImage(body.getImage());
+
+        userRepository.save(user);
+
+        return Response.generate("user details updated", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> updateInfo(Long id, UserUpdateInfoDTO body) {
+        Optional<User> userResult = userRepository.findById(id);
+
+        if(userResult.isEmpty()) {
+            return Response.generate("user details not found", HttpStatus.NOT_FOUND);
+        }
+        User user = userResult.get();
+
+        user.setCountry(body.getCountry());
+        user.setCountryCode(body.getCountryCode());
+        user.setContactNumber(body.getContactNumber());
 
         userRepository.save(user);
 
