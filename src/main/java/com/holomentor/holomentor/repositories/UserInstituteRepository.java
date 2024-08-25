@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public interface UserInstituteRepository extends JpaRepository<UserInstitute, Long> {
     List<UserInstitute> findByInstituteId(Long id);
 

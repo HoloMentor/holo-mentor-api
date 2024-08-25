@@ -29,7 +29,7 @@ public class InstituteClass {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeek dayOfWeek;
-
+    @Column(insertable = false, updatable = false)
     private Time createdAt;
 
     public enum DayOfWeek {

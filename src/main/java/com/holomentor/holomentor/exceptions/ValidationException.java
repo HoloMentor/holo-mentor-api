@@ -15,13 +15,17 @@ public class ValidationException {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             errors.put(((FieldError) error).getField(), error.getDefaultMessage());
         });
 
-        return errors;
+        Map<String, Object> errorResponse = new HashMap<>();
+//        show the first error
+        errorResponse.put("message", errors.values().stream().findFirst());
+        errorResponse.put("errors", errors);
+
+        return errorResponse;
     }
 }
