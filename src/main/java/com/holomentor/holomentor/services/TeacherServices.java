@@ -112,5 +112,16 @@ public class TeacherServices {
         }
         return Response.generate("teacher not found", HttpStatus.NOT_FOUND);
     }
+
+    public ResponseEntity<Object> fetchTeacherById(Long id) {
+        Optional<User> teacher = userRepository.findById(id);
+        if(teacher.isPresent()) {
+            User user = teacher.get();
+            return Response.generate("Teacher found", HttpStatus.OK);
+        }
+        return Response.generate("Teacher not found", HttpStatus.NOT_FOUND);
+    }
+
+
 }
 

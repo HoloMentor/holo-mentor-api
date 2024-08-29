@@ -3,6 +3,7 @@ package com.holomentor.holomentor.controllers;
 import com.holomentor.holomentor.dto.subject.SubjectUpdateDTO;
 import com.holomentor.holomentor.dto.teacher.TeacherCreateDTO;
 import com.holomentor.holomentor.dto.teacher.TeacherUpdateDTO;
+import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.services.TeacherServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,18 @@ public class TeacherController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) { {return teacherServices.delete(id);}}
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        return teacherServices.delete(id);
+    }
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody TeacherUpdateDTO body) {
         return teacherServices.update(id, body);
+    }
+
+    @GetMapping("/fetch/{id}")
+    public ResponseEntity<Object> getTeacher(@Valid @PathVariable Long id) {
+        return teacherServices.fetchTeacherById(id);
     }
 
 }

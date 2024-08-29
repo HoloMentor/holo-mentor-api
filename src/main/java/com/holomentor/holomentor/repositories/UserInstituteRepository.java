@@ -21,6 +21,12 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
 
     List<UserInstitute> findByUserEmail(String email);
 
+    Optional<UserInstitute> findByUserIdAndInstituteId(Long id, Long instituteId);
+
+    Optional<UserInstitute> findByUserIdAndInstituteIdAndRole(Long id, Long instituteId, UserInstitute.RoleTypes role);
+
+    List<UserInstitute> findByRoleAndInstituteId(UserInstitute.RoleTypes role, Long instituteId);
+
     @Query("SELECT s.userId as id, u.firstName as firstname, u.lastName as lastname, u.image as image " +
             "FROM UserInstitute s " +
             "LEFT JOIN User u ON s.userId = u.id " +
