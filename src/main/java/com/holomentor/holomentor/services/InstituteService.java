@@ -135,7 +135,7 @@ public class InstituteService {
         data.put("pages", institutes.getTotalPages());
         data.put("data", institutes.getContent());
 
-        return Response.generate("all institutes have been registered.", HttpStatus.OK, data);
+        return Response.generate("institutes.", HttpStatus.OK, data);
     }
 
     public ResponseEntity<Object> delete(Long id) {

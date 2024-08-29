@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public interface InstituteRepository extends JpaRepository<Institute, Long> {
     Page<Institute> findByNameContainingIgnoreCaseAndIsDeleted(String name, Boolean isDeleted, Pageable pageable);
 }
