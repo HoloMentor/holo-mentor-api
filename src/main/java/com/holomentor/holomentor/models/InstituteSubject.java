@@ -13,7 +13,7 @@ public class InstituteSubject {
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     private Long instituteId;
     private String name;
     @Column(insertable = false, updatable = false)
