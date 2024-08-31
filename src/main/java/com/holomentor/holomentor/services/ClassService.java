@@ -30,14 +30,10 @@ import java.util.HashMap;
 @Transactional
 public class ClassService {
 
-    private final InstituteClassRepository instituteClassRepository;
-    private final UserInstituteRepository userInstituteRepository;
-
     @Autowired
-    public ClassService(InstituteClassRepository instituteClassRepository, UserInstituteRepository userInstituteRepository, UserRepository userRepository ) {
-        this.instituteClassRepository = instituteClassRepository;
-        this.userInstituteRepository = userInstituteRepository;
-    }
+    private InstituteClassRepository instituteClassRepository;
+    @Autowired
+    private UserInstituteRepository userInstituteRepository;
 
     public ResponseEntity<Object> create(ClassCreateDTO body) {
 

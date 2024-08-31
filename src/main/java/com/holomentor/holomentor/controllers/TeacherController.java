@@ -45,4 +45,9 @@ public class TeacherController {
         return teacherServices.getTeacherById(id);
     }
 
+    @GetMapping("/stats/{id}")
+    public ResponseEntity<Object> getTeacherStats(@Valid @PathVariable Long id) {
+        return teacherServices.getTeacherStats(id);
+    }
+
 }

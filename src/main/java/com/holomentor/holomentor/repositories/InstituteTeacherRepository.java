@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.repositories;
 
 import com.holomentor.holomentor.models.InstituteClass;
+import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface InstituteTeacherRepository extends JpaRepository<Object, Long> {
+public interface InstituteTeacherRepository extends JpaRepository<UserInstitute, Long> {
 
     @Query("select COUNT(DISTINCT ic.id) as classCount, " +
             "COUNT(DISTINCT ics.studentId) as studentCount " +

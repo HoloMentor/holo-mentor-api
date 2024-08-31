@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/classes")
 public class ClassController {
 
-    private final ClassService classService;
-
     @Autowired
-    public ClassController(ClassService classService) {
-        this.classService = classService;
-    }
+    private ClassService classService;
 
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody ClassCreateDTO body) {
