@@ -27,12 +27,14 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
 
     List<UserInstitute> findByRoleAndInstituteId(UserInstitute.RoleTypes role, Long instituteId);
 
-    @Query("SELECT s.userId as id, u.firstName as firstname, u.lastName as lastname, u.image as image " +
+    @Query("SELECT s.userId as id, u.firstName as firstname, u.lastName as lastname, u.image as image, COUNT(DISTINCT c.id) as noOfClasses " +
             "FROM UserInstitute s " +
             "LEFT JOIN User u ON s.userId = u.id " +
+            "LEFT JOIN InstituteClass c ON c.teacherId = s.userId " +
             "WHERE (u.firstName ILIKE %:name% OR u.lastName ILIKE %:name%) " +
             "AND s.instituteId = :instituteId " +
-            "AND s.role = 'TEACHER'")
+            "AND s.role = 'TEACHER' " +
+            "GROUP BY s.userId, u.firstName, u.lastName, u.image")
     Page<InstituteTeacherProjection> findByInstituteIdTeachers( String name, Long instituteId, Pageable pageable);
 
 }

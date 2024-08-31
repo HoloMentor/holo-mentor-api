@@ -55,10 +55,10 @@ public class ClassService {
         if (optionalUser.isPresent()) {
             instituteClass.setInstituteTeacherId(optionalUser.get().getId());
             instituteClassRepository.save(instituteClass);
-            return Response.generate("Class created successfully", HttpStatus.OK);
+            return Response.generate("class created successfully", HttpStatus.OK);
         }
         else{
-            return Response.generate("User not found", HttpStatus.NOT_FOUND);
+            return Response.generate("user not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -67,13 +67,13 @@ public class ClassService {
         Optional<InstituteClass> instituteClass = instituteClassRepository.findById(id);
 
         instituteClass.ifPresent(instituteClassRepository::delete);
-        return Response.generate("Deleted class", HttpStatus.OK);
+        return Response.generate("deleted class", HttpStatus.OK);
     }
 
     public ResponseEntity<Object> update(Long id, ClassUpdateDTO body) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
         if (classResult.isEmpty()) {
-            return Response.generate("Class not found", HttpStatus.NOT_FOUND);
+            return Response.generate("class not found", HttpStatus.NOT_FOUND);
         }
         InstituteClass instituteClass = classResult.get();
 
@@ -86,7 +86,7 @@ public class ClassService {
 
         instituteClassRepository.save(instituteClass);
 
-        return Response.generate("Updated", HttpStatus.OK);
+        return Response.generate("updated", HttpStatus.OK);
     }
 
 
@@ -103,10 +103,10 @@ public class ClassService {
     public ResponseEntity<Object> get(Long id) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
         if (classResult.isEmpty()) {
-            return Response.generate("Class not found", HttpStatus.NOT_FOUND);
+            return Response.generate("class not found", HttpStatus.NOT_FOUND);
         }
 
-        return Response.generate("Class", HttpStatus.OK, classResult.get());
+        return Response.generate("class", HttpStatus.OK, classResult.get());
     }
 
 
