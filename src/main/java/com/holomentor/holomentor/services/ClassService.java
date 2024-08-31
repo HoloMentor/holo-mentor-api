@@ -76,12 +76,23 @@ public class ClassService {
 
     public ResponseEntity<Object> update(Long id, ClassUpdateDTO body) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
-        if(classResult.isEmpty()) {
-            return Response.generate("subject not found", HttpStatus.NOT_FOUND);
+        if (classResult.isEmpty()) {
+            return Response.generate("Class not found", HttpStatus.NOT_FOUND);
         }
         InstituteClass instituteClass = classResult.get();
-        return Response.generate("Updated" , HttpStatus.OK);
+
+        instituteClass.setClassName(body.getClassName());
+        instituteClass.setSubjectId(body.getSubjectId());
+        instituteClass.setStartTime(body.getStartTime());
+        instituteClass.setEndTime(body.getEndTime());
+        instituteClass.setDayOfWeek(body.getDayOfWeek());
+        instituteClass.setTeacherId(body.getTeacherId());
+
+        instituteClassRepository.save(instituteClass);
+
+        return Response.generate("Updated", HttpStatus.OK);
     }
+
 
     public ResponseEntity<Object> findByInstituteId(Long instituteId, String search, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -92,5 +103,15 @@ public class ClassService {
         data.put("data", instituteClassList.getContent());
         return Response.generate("classes", HttpStatus.OK, data);
     }
+
+    public ResponseEntity<Object> get(Long id) {
+        Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
+        if (classResult.isEmpty()) {
+            return Response.generate("Class not found", HttpStatus.NOT_FOUND);
+        }
+
+        return Response.generate("Class", HttpStatus.OK, classResult.get());
+    }
+
 
 }
