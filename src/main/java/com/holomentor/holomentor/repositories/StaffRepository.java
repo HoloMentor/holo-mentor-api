@@ -12,7 +12,4 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface StaffRepository extends JpaRepository<User, Long> {
-
-    Page<User> findByNameContainingIgnoreCaseAndIsDeleted(String name, Boolean isDeleted, Pageable pageable);
-}
+public interface StaffRepository extends JpaRepository<User, Long> {}

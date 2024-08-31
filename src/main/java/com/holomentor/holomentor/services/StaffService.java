@@ -35,16 +35,12 @@ public class StaffService {
         return Response.generate("staff details found", HttpStatus.OK, staff);
     }
 
-    public ResponseEntity<Object> getAll(String search, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<User> staff= staffRepository.findByNameContainingIgnoreCaseAndIsDeleted(search, false, pageable);
+    public ResponseEntity<Object> getInstituteTeacherStaff(Long instituteId, Long teacherId, String search, Integer page, Integer size) {
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("pages", staff.getTotalPages());
-        data.put("data", staff.getContent());
-
-        return Response.generate("Staff members.", HttpStatus.OK, data);
+        //i need to change this by adding query to get staff members related to institute and specific teacher
+        return Response.generate("staff found", HttpStatus.OK, "This is a dummy response because it gives error");
     }
+
 
 
 }
