@@ -35,6 +35,11 @@ public class ClassController {
         return  classService.update(id, body);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        return classService.get(id);
+    }
+
     @GetMapping("/institute/{id}")
     public ResponseEntity<Object> institute(
             @PathVariable Long id,
@@ -43,4 +48,6 @@ public class ClassController {
             @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
+
+
 }
