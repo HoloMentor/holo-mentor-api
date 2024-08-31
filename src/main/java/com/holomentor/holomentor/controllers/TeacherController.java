@@ -40,9 +40,9 @@ public class TeacherController {
         return teacherServices.update(id, body);
     }
 
-    @GetMapping("/fetch/{id}")
-    public ResponseEntity<Object> getTeacher(@Valid @PathVariable Long id) {
-        return teacherServices.getTeacherById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> get(@Valid @PathVariable Long id) {
+        return teacherServices.get(id);
     }
 
     @GetMapping("/stats/{id}")

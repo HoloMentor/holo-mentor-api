@@ -45,5 +45,16 @@ public class ClassController {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
 
+    @GetMapping("/teacher/{teacherId}/institute/{instituteId}")
+    public ResponseEntity<Object> getTeacher(
+            @PathVariable Long teacherId,
+            @PathVariable Long instituteId,
+            @RequestParam(name="search", defaultValue = "") String search,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize
+    ) {
+        return classService.findByTeacherIdAndInstituteId(teacherId, instituteId, search, pageNo, pageSize);
+    }
+
 
 }

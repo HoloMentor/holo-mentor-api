@@ -5,6 +5,7 @@ import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassTeacherProjection;
 import com.holomentor.holomentor.repositories.InstituteClassRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
 import com.holomentor.holomentor.repositories.UserRepository;
@@ -109,5 +110,12 @@ public class ClassService {
         return Response.generate("class", HttpStatus.OK, classResult.get());
     }
 
-
+    public ResponseEntity<Object> findByTeacherIdAndInstituteId(Long teacherId, Long instituteId,String search, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size); // Ensure page is zero-based
+        Page<InstituteClassTeacherProjection> classesResult = instituteClassRepository.findClassesByTeacherIdAndInstituteId(search, teacherId, instituteId, pageable);
+        if (classesResult.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Class not found");
+        }
+        return Response.generate("class", HttpStatus.OK, classesResult.get());
+    }
 }
