@@ -54,6 +54,8 @@ public class SecurityConfig {
                          .requestMatchers("/institutes/**")
                          .authenticated()
                          .requestMatchers("/subjects/**")
+                         .authenticated()
+                         .requestMatchers("/classes/**")
                          .authenticated();
         });
 
