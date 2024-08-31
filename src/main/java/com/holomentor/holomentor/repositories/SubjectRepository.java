@@ -20,7 +20,7 @@ public interface SubjectRepository extends JpaRepository<InstituteSubject, Long>
     @Query("SELECT s.id as id, s.name as name, s.instituteId as instituteId, s.createdAt as createdAt, COUNT(DISTINCT c.id) AS classCount, COUNT(DISTINCT cs.studentId) AS studentCount " +
             "FROM InstituteSubject s " +
             "LEFT JOIN InstituteClass c ON s.id = c.subjectId " +
-            "LEFT JOIN InstituteClassStudents cs ON c.id = cs.classId " +
+            "LEFT JOIN InstituteClassStudent cs ON c.id = cs.classId " +
             "WHERE s.name ILIKE %:name% AND s.instituteId = :instituteId " +
             "GROUP BY s.id, s.name")
     Page<InstituteSubjectProjection> findByNameContainingIgnoreCaseAndInstituteIdWithClassCountAndStudentCount(String name, Long instituteId, Pageable pageable);

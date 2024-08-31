@@ -3,8 +3,6 @@ package com.holomentor.holomentor.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.sql.Time;
 
@@ -12,7 +10,7 @@ import java.sql.Time;
 @Data
 @Entity
 @Table(name = "institute_class_students")
-public class InstituteClassStudents {
+public class InstituteClassStudent {
     @Id
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

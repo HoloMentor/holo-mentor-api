@@ -1,10 +1,11 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.teacher.TeacherUpdateDTO;
-import com.holomentor.holomentor.models.InstituteSubject;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherProjection;
+import com.holomentor.holomentor.repositories.InstituteTeacherRepository;
+import com.holomentor.holomentor.repositories.InstituteTeacherStatProjection;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
@@ -23,20 +24,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TeacherServices {
 
-    private final UserRepository userRepository;
-    private final UserInstituteRepository userInstituteRepository;
-
     @Autowired
-    public TeacherServices(UserRepository userRepository, UserInstituteRepository userInstituteRepository) {
-        this.userRepository = userRepository;
-        this.userInstituteRepository = userInstituteRepository;
-    }
+    private UserRepository userRepository;
+    @Autowired
+    private UserInstituteRepository userInstituteRepository;
+    @Autowired
+    private InstituteTeacherRepository instituteTeacherRepository;
 
     public ResponseEntity<Object> createTeacher(TeacherCreateDTO teacher) {
         User user = new User();
@@ -49,7 +47,7 @@ public class TeacherServices {
         userRepository.save(user);
         createUserInstitute(teacher.getEmail(),teacher.getInstituteId());
 
-        return ResponseEntity.ok("Teacher created successfully");
+        return ResponseEntity.ok("teacher created successfully");
     }
 
     public void createUserInstitute(String email, Long instituteId) {
@@ -67,11 +65,11 @@ public class TeacherServices {
 
             userInstituteRepository.save(userInstitute);
         } else {
-            System.out.println("User not found for email: " + email);
+            System.out.println("user not found for email: " + email);
         }
     }
 
-    public ResponseEntity<Object> fetchTeachersByInstituteId(Long instituteId,String search, Integer page, Integer size) {
+    public ResponseEntity<Object> getTeachersByInstituteId(Long instituteId, String search, Integer page, Integer size) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<InstituteTeacherProjection> teachers = userInstituteRepository.findByInstituteIdTeachers(search, instituteId, pageable);
@@ -80,7 +78,7 @@ public class TeacherServices {
         data.put("pages", teachers.getTotalPages());
         data.put("data", teachers.getContent());
 
-        return Response.generate("Teachers Found", HttpStatus.OK, data);
+        return Response.generate("teachers Found", HttpStatus.OK, data);
     }
 
     public ResponseEntity<Object> delete(Long teacherId) {
@@ -113,13 +111,20 @@ public class TeacherServices {
         return Response.generate("teacher not found", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Object> fetchTeacherById(Long id) {
+    public ResponseEntity<Object> getTeacherById(Long id) {
         Optional<User> teacher = userRepository.findById(id);
         if(teacher.isPresent()) {
             User user = teacher.get();
-            return Response.generate("Teacher found", HttpStatus.OK);
+            return Response.generate("teacher found", HttpStatus.OK);
         }
-        return Response.generate("Teacher not found", HttpStatus.NOT_FOUND);
+
+        return Response.generate("teacher not found", HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<Object> getTeacherStats(Long id) {
+        InstituteTeacherStatProjection instituteTeacherStats = instituteTeacherRepository.findTeacherStatsById(id);
+
+        return Response.generate("teacher statistics are found", HttpStatus.OK, instituteTeacherStats);
     }
 
 

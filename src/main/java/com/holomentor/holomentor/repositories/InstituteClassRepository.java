@@ -30,9 +30,9 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "COUNT(DISTINCT cs.studentId) as studentCount " +
             "FROM InstituteClass c " +
             "LEFT JOIN InstituteSubject s ON s.id = c.subjectId " +
-            "LEFT JOIN InstituteClassStudents cs ON c.id = cs.classId " +
+            "LEFT JOIN InstituteClassStudent cs ON c.id = cs.classId " +
             "LEFT JOIN User u ON c.teacherId = u.id " +
             "WHERE c.className ILIKE %:name% AND s.instituteId = :instituteId " +
             "GROUP BY c.id, u.firstName, u.lastName, s.name, c.className")
-    Page<InstituteClassProjection> findByClassByInstitute(@Param("name") String name,Long instituteId, Pageable pageable);
+    Page<InstituteClassProjection> findByClassByInstitute(@Param("name") String name, Long instituteId, Pageable pageable);
 }
