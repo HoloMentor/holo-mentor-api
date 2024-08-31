@@ -2,6 +2,7 @@ package com.holomentor.holomentor.repositories;
 
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,5 +35,9 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "LEFT JOIN User u ON c.teacherId = u.id " +
             "WHERE c.className ILIKE %:name% AND s.instituteId = :instituteId " +
             "GROUP BY c.id, u.firstName, u.lastName, s.name, c.className")
-    Page<InstituteClassProjection> findByClassByInstitute(@Param("name") String name, Long instituteId, Pageable pageable);
+    Page<InstituteClassProjection> findByClassByInstitute(String name, Long instituteId, Pageable pageable);
+
+    Page<InstituteTeacherClassProjection> findInstituteClassesByTeacherId(Long teacherId, Pageable pageable);
+
+
 }

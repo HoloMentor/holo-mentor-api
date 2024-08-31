@@ -28,7 +28,7 @@ public class ClassController {
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<Object> update(@Valid @PathVariable Long id,@Valid @RequestBody ClassUpdateDTO body){
-        return  classService.update(id, body);
+        return classService.update(id, body);
     }
 
     @GetMapping("/{id}")

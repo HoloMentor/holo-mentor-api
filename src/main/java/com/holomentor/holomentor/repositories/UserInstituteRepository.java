@@ -27,7 +27,7 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
 
     List<UserInstitute> findByRoleAndInstituteId(UserInstitute.RoleTypes role, Long instituteId);
 
-    @Query("SELECT s.userId as id, u.firstName as firstname, u.lastName as lastname, u.image as image " +
+    @Query("SELECT s.userId as id, u.firstName as firstName, u.lastName as lastName, u.image as image " +
             "FROM UserInstitute s " +
             "LEFT JOIN User u ON s.userId = u.id " +
             "WHERE (u.firstName ILIKE %:name% OR u.lastName ILIKE %:name%) " +

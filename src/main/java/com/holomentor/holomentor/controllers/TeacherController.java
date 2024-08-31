@@ -50,4 +50,11 @@ public class TeacherController {
         return teacherServices.getTeacherStats(id);
     }
 
+    @GetMapping("/classes/{id}")
+    public ResponseEntity<Object> getTeacherClasses(@PathVariable Long id,
+                                                    @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+                                                    @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return teacherServices.getTeacherClasses(id, pageNo, pageSize);
+    }
+
 }

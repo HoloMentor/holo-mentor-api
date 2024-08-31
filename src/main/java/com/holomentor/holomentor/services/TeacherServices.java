@@ -1,13 +1,13 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.teacher.TeacherUpdateDTO;
+import com.holomentor.holomentor.models.Institute;
+import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.models.UserInstitute;
+import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherProjection;
-import com.holomentor.holomentor.repositories.InstituteTeacherRepository;
-import com.holomentor.holomentor.repositories.InstituteTeacherStatProjection;
-import com.holomentor.holomentor.repositories.UserInstituteRepository;
-import com.holomentor.holomentor.repositories.UserRepository;
+import com.holomentor.holomentor.repositories.*;
 import com.holomentor.holomentor.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +35,8 @@ public class TeacherServices {
     private UserInstituteRepository userInstituteRepository;
     @Autowired
     private InstituteTeacherRepository instituteTeacherRepository;
+    @Autowired
+    private InstituteClassRepository instituteClassRepository;
 
     public ResponseEntity<Object> createTeacher(TeacherCreateDTO teacher) {
         User user = new User();
@@ -125,6 +127,17 @@ public class TeacherServices {
         InstituteTeacherStatProjection instituteTeacherStats = instituteTeacherRepository.findTeacherStatsById(id);
 
         return Response.generate("teacher statistics are found", HttpStatus.OK, instituteTeacherStats);
+    }
+
+    public ResponseEntity<Object> getTeacherClasses(Long id, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<InstituteTeacherClassProjection> institutesClasses = instituteClassRepository.findInstituteClassesByTeacherId(id, pageable);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", institutesClasses.getTotalPages());
+        data.put("data", institutesClasses.getContent());
+
+        return Response.generate("teacher's classes", HttpStatus.OK, data);
     }
 
 
