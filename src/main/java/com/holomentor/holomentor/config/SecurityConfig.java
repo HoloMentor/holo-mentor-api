@@ -47,9 +47,15 @@ public class SecurityConfig {
                          .permitAll()
                          .requestMatchers("/auth/**")
                          .permitAll()
+                         .requestMatchers("/file/**")
+                         .permitAll()
                          .requestMatchers("/users/**")
                          .authenticated()
                          .requestMatchers("/institutes/**")
+                         .authenticated()
+                         .requestMatchers("/subjects/**")
+                         .authenticated()
+                         .requestMatchers("/classes/**")
                          .authenticated();
         });
 

@@ -19,8 +19,10 @@ public class InstituteClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long teacherId;
+    @Column(name = "institute_id", nullable = false)
     private Long instituteId;
     private Long instituteTeacherId;
+    @Column(name = "subject_id", nullable = false)
     private Long subjectId;
     private String className;
     private Time startTime;
@@ -29,8 +31,16 @@ public class InstituteClass {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeek dayOfWeek;
-
+    @Column(insertable = false, updatable = false)
     private Time createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "institute_id", insertable=false, updatable=false)
+    private Institute institute;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "subject_id", insertable=false, updatable=false)
+    private InstituteSubject subject;
+
 
     public enum DayOfWeek {
         MON,

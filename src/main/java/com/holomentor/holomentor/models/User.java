@@ -1,5 +1,6 @@
 package com.holomentor.holomentor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -26,7 +27,12 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    @JsonIgnore
     private String password;
+    private String image;
+    private String country;
+    private String countryCode;
+    private String contactNumber;
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private RoleTypes role = RoleTypes.USER;

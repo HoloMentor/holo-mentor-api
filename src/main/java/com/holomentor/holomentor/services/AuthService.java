@@ -279,6 +279,7 @@ public class AuthService {
         data.put("email", userInstitute.getUser().getEmail());
         data.put("user_role", userInstitute.getUser().getRole().toString());
         data.put("institute_role", userInstitute.getRole().toString());
+        data.put("image", userInstitute.getUser().getImage());
 
         return data;
     }
