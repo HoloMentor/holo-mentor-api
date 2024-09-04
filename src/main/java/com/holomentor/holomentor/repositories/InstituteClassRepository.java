@@ -18,7 +18,6 @@ import java.util.Optional;
 @Transactional
 public interface InstituteClassRepository extends JpaRepository<InstituteClass, Long> {
 
-    Optional<InstituteClass> findByClassName(String name);
 
     Optional<InstituteClass> findById(Long id);
 
