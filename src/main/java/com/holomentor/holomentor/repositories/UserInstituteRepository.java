@@ -32,7 +32,8 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
             "LEFT JOIN User u ON s.userId = u.id " +
             "WHERE (u.firstName ILIKE %:name% OR u.lastName ILIKE %:name%) " +
             "AND s.instituteId = :instituteId " +
+            "AND s.isActive = :isActive " +
             "AND s.role = 'TEACHER'")
-    Page<InstituteTeacherProjection> findByInstituteIdTeachers( String name, Long instituteId, Pageable pageable);
+    Page<InstituteTeacherProjection> findByInstituteIdTeachersAndIsActive( String name, Long instituteId, Boolean isActive, Pageable pageable);
 
 }

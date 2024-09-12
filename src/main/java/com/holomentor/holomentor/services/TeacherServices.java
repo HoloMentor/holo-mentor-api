@@ -86,7 +86,7 @@ public class TeacherServices {
         userInvitationRepository.save(invitation);
 
         HashMap<String, String> dynamicData = new HashMap<>();
-        String redirectLink = String.format("invitation%s?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
+        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
         dynamicData.put("redirect_link", redirectLink);
 
 //        send mail to the user account
@@ -103,7 +103,7 @@ public class TeacherServices {
     public ResponseEntity<Object> getTeachersByInstituteId(Long instituteId, String search, Integer page, Integer size) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<InstituteTeacherProjection> teachers = userInstituteRepository.findByInstituteIdTeachers(search, instituteId, pageable);
+        Page<InstituteTeacherProjection> teachers = userInstituteRepository.findByInstituteIdTeachersAndIsActive(search, instituteId, true, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", teachers.getTotalPages());
