@@ -32,7 +32,7 @@ public class InstituteClass {
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeek dayOfWeek;
     @Column(insertable = false, updatable = false)
-    private Time createdAt;
+    private String createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "institute_id", insertable=false, updatable=false)

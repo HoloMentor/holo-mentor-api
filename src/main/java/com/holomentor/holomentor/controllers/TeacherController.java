@@ -23,15 +23,6 @@ public class TeacherController {
         return teacherServices.create(body);
     }
 
-    @GetMapping("/institute/{id}")
-    public ResponseEntity<Object> institute(
-            @PathVariable Long id,
-            @RequestParam(name="search", defaultValue = "") String search,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
-    }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         return teacherServices.delete(id);
@@ -52,11 +43,20 @@ public class TeacherController {
         return teacherServices.getTeacherStats(id);
     }
 
-    @GetMapping("/classes/{id}")
-    public ResponseEntity<Object> getTeacherClasses(@PathVariable Long id,
+    @GetMapping("/institute/classes/{id}")
+    public ResponseEntity<Object> getInstituteTeacherClasses(@PathVariable Long id,
                                                     @RequestParam(name="page", defaultValue = "1") Integer pageNo,
                                                     @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        return teacherServices.getTeacherClasses(id, pageNo, pageSize);
+        return teacherServices.getInstituteTeacherClasses(id, pageNo, pageSize);
+    }
+
+    @GetMapping("/institute/{id}")
+    public ResponseEntity<Object> institute(
+            @PathVariable Long id,
+            @RequestParam(name="search", defaultValue = "") String search,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
     }
 
 }

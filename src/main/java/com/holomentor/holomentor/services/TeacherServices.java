@@ -158,9 +158,9 @@ public class TeacherServices {
         return Response.generate("teacher statistics are found", HttpStatus.OK, instituteTeacherStats);
     }
 
-    public ResponseEntity<Object> getTeacherClasses(Long id, Integer page, Integer size) {
+    public ResponseEntity<Object> getInstituteTeacherClasses(Long id, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<InstituteTeacherClassProjection> institutesClasses = instituteClassRepository.findInstituteClassesByTeacherId(id, pageable);
+        Page<InstituteTeacherClassProjection> institutesClasses = instituteClassRepository.findInstituteClassesByInstituteTeacherId(id, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", institutesClasses.getTotalPages());

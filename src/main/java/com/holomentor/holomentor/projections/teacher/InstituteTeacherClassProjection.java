@@ -16,7 +16,6 @@ public interface InstituteTeacherClassProjection {
     Time getStartTime();
     Time getEndTime();
     InstituteClass.DayOfWeek getDayOfWeek();
-    Timestamp getCreatedAt();
     Institute getInstitute();
     InstituteSubject getSubject();
 }

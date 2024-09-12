@@ -34,7 +34,7 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "GROUP BY c.id, u.firstName, u.lastName, s.name, c.className")
     Page<InstituteClassProjection> findByClassByInstitute(String name, Long instituteId, Pageable pageable);
 
-    Page<InstituteTeacherClassProjection> findInstituteClassesByTeacherId(Long teacherId, Pageable pageable);
+    Page<InstituteTeacherClassProjection> findInstituteClassesByInstituteTeacherId(Long teacherId, Pageable pageable);
 
 
 }
