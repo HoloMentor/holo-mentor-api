@@ -18,9 +18,7 @@ import java.util.Optional;
 @Transactional
 public interface InstituteClassRepository extends JpaRepository<InstituteClass, Long> {
 
-
     Optional<InstituteClass> findById(Long id);
-
 
     @Query("SELECT c.id as id, " +
             "u.firstName as firstName, " +

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/teachers")
@@ -17,8 +19,8 @@ public class TeacherController {
     private TeacherServices teacherServices;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) {
-        return teacherServices.createTeacher(body);
+    public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) throws IOException {
+        return teacherServices.create(body);
     }
 
     @GetMapping("/institute/{id}")
