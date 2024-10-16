@@ -10,6 +10,8 @@ public class SendGridMail {
                 return "d-b3dc10a0c47043109f85ba471b875c01";
             case TEACHER_REGISTRATION:
                 return "d-b3dc10a0c47043109f85ba471b875c01";
+            case STAFF_REGISTRATION:
+                return "NULL"; //need to chage this to add key
             default:
                 return null;
         }
@@ -18,5 +20,6 @@ public class SendGridMail {
     public enum TemplateNames {
         INSTITUTE_REGISTRATION,
         TEACHER_REGISTRATION,
+        STAFF_REGISTRATION,
     }
 }
