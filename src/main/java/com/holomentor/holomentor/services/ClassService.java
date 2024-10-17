@@ -106,7 +106,7 @@ public class ClassService {
             return Response.generate("Class not found", HttpStatus.NOT_FOUND);
         }
 
-        return Response.generate("Class", HttpStatus.OK, classResult.get());
+        return Response.generate("class details", HttpStatus.OK, classResult.get());
     }
 
 
