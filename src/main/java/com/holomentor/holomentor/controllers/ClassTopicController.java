@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/topic")
+@RequestMapping("/topics")
 public class ClassTopicController {
 
     @Autowired
@@ -39,8 +39,9 @@ public class ClassTopicController {
     }
 
     @GetMapping("/class/{id}")
-    public ResponseEntity<Object> getClassTopics(@Valid @PathVariable Long id) {
-        return classTopicService.getClassTopics(id);
+    public ResponseEntity<Object> getClassTopics(@Valid @PathVariable Long id,
+                                                 @RequestParam(name="materials", defaultValue = "false") Boolean withMaterials) {
+        return classTopicService.getClassTopics(id, withMaterials);
     }
 
 }

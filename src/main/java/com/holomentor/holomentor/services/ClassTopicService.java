@@ -5,6 +5,7 @@ import com.holomentor.holomentor.dto.classTopic.ClassTopicUpdateDTO;
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
 import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.models.*;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassTopicsWithSubTopicsAndMaterialsProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassTopicsWithSubTopicsProjection;
 import com.holomentor.holomentor.repositories.InstituteClassSubTopicRepository;
 import com.holomentor.holomentor.repositories.InstituteClassTopicRepository;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -68,9 +71,14 @@ public class ClassTopicService {
         return Response.generate("class topic deleted", HttpStatus.OK, instituteClassTopicResult.get());
     }
 
-    public ResponseEntity<Object> getClassTopics(Long classId) {
-        List<InstituteClassTopic> instituteClassTopics = instituteClassTopicRepository.findAllByClassId(classId);
+    public ResponseEntity<Object> getClassTopics(Long classId, Boolean withMaterials) {
+        if(withMaterials) {
+            List<InstituteClassTopicsWithSubTopicsAndMaterialsProjection> instituteClassTopics = instituteClassTopicRepository.findAllClassTopicsWithSubTopicsAndMaterials(classId);
+            return Response.generate("class topics", HttpStatus.OK, instituteClassTopics);
+        } else {
+            List<InstituteClassTopicsWithSubTopicsProjection> instituteClassTopics = instituteClassTopicRepository.findAllClassTopicsWithSubTopics(classId);
+            return Response.generate("class topics", HttpStatus.OK, instituteClassTopics);
+        }
 
-        return Response.generate("class topics", HttpStatus.OK, instituteClassTopics);
     }
 }
