@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("staff")
 public class StaffController {
@@ -30,7 +32,7 @@ public class StaffController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createStaff(@Valid @RequestBody StaffCreateDTO body) {
+    public ResponseEntity<Object> createStaff(@Valid @RequestBody StaffCreateDTO body) throws IOException {
         return staffService.create(body);
     }
 }

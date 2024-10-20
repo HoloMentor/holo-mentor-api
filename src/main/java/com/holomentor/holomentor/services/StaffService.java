@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-
-
 @Service
 public class StaffService {
 
@@ -68,10 +66,8 @@ public class StaffService {
 
         // Create a TeacherStaff record
         TeacherStaff teacherStaff = new TeacherStaff();
-        teacherStaff.setUserStaffId(staffUser.getId());
-        teacherStaff.setUserTeacherId(body.getTeacherId());
-        teacherStaff.setUserInstituteStaffId(userInstitute.getId());
-        teacherStaff.setUserInstituteTeacherId(body.getTeacherInstituteId());
+        teacherStaff.setUserStaffId(staffUser.getId()); // user_id
+        teacherStaff.setUserTeacherId(body.getTeacherId()); // teacher_id
         teacherStaff.setInstituteId(body.getInstituteId());
         teacherStaffRepository.save(teacherStaff);
 
@@ -91,7 +87,7 @@ public class StaffService {
     }
 
     public Object getInstituteTeacherStaff(Long instituteId, Long teacherId, String search, Integer pageNo, Integer pageSize) {
-        // Implement your actual logic to fetch teacher staff data
+        // fetch teacher staff data
         Map<String, Object> response = new HashMap<>();
         response.put("instituteId", instituteId);
         response.put("teacherId", teacherId);
@@ -102,9 +98,8 @@ public class StaffService {
         return response;
     }
 
-    // Method to get a specific staff member by ID
     public Object get(Long id) {
-        // Implement your actual logic to fetch the staff member
+        // fetch the staff member
         Map<String, Object> response = new HashMap<>();
         response.put("staffId", id);
         response.put("message", "Fetched staff data successfully.");
