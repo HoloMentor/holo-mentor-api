@@ -1,9 +1,7 @@
 package com.holomentor.holomentor.projections.instituteClass;
 
 import com.holomentor.holomentor.models.InstituteClassMaterial;
-import com.holomentor.holomentor.models.InstituteClassSubTopic;
 
-import java.sql.Time;
 import java.util.List;
 
 public interface InstituteClassTopicsWithSubTopicsProjection {
@@ -12,5 +10,9 @@ public interface InstituteClassTopicsWithSubTopicsProjection {
     Long getClassId();
     String getName();
     String getCreatedAt();
-    List<InstituteClassSubTopic> getSubTopics();
+    Long getSubTopicId();
+    String getSubTopicName();
+    Long getMaterialId();
+    InstituteClassMaterial.ClassMaterialType getMaterialType();
+    String getMaterialUrl();
 }

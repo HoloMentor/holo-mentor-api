@@ -1,7 +1,11 @@
 package com.holomentor.holomentor.services;
 
+import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicDTO;
+import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicWithMaterialsDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicCreateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicUpdateDTO;
+import com.holomentor.holomentor.dto.classTopic.ClassTopicWithSubTopicsDTO;
+import com.holomentor.holomentor.dto.classTopic.ClassTopicWithSubTopicsWithMaterialsDTO;
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
 import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.models.*;
@@ -17,9 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -73,12 +75,47 @@ public class ClassTopicService {
 
     public ResponseEntity<Object> getClassTopics(Long classId, Boolean withMaterials) {
         if(withMaterials) {
-            List<InstituteClassTopicsWithSubTopicsAndMaterialsProjection> instituteClassTopics = instituteClassTopicRepository.findAllClassTopicsWithSubTopicsAndMaterials(classId);
-            return Response.generate("class topics", HttpStatus.OK, instituteClassTopics);
+            List<InstituteClassTopicsWithSubTopicsProjection> instituteClassTopics = instituteClassTopicRepository.findAllClassTopicsWithSubTopicsAndMaterials(classId);
+            Collection<List<InstituteClassTopicsWithSubTopicsProjection>> groupedByTopic = instituteClassTopics.stream().collect(Collectors.groupingBy(InstituteClassTopicsWithSubTopicsProjection::getId)).values();
+
+            List<ClassTopicWithSubTopicsWithMaterialsDTO> data = groupedByTopic.stream().map(topicData -> {
+                ClassTopicWithSubTopicsWithMaterialsDTO classTopicWithSubTopicsWithMaterials = new ClassTopicWithSubTopicsWithMaterialsDTO();
+//                group the subtopics
+                Collection<List<InstituteClassTopicsWithSubTopicsProjection>> subTopics =  topicData.stream().filter(record -> record.getSubTopicId() != null).collect(Collectors.groupingBy(InstituteClassTopicsWithSubTopicsProjection::getSubTopicId)).values();
+//                group the materials in each sub topic to "materials"
+                List<ClassSubTopicWithMaterialsDTO> classSubTopicsWithMaterials = subTopics.stream().map(subTopicData -> {
+                    List<InstituteClassMaterial> instituteClassMaterials = subTopicData.stream().map(subTopicMaterial -> {
+                        InstituteClassMaterial instituteClassMaterial = new InstituteClassMaterial();
+                        instituteClassMaterial.setId(subTopicMaterial.getMaterialId());
+                        instituteClassMaterial.setType(subTopicMaterial.getMaterialType());
+                        instituteClassMaterial.setUrl(subTopicMaterial.getMaterialUrl());
+
+                        return instituteClassMaterial;
+                    }).collect(Collectors.toList());
+
+                    ClassSubTopicWithMaterialsDTO classSubTopicWithMaterials = new ClassSubTopicWithMaterialsDTO();
+                    classSubTopicWithMaterials.setId(subTopicData.get(0).getId());
+                    classSubTopicWithMaterials.setName(subTopicData.get(0).getName());
+                    classSubTopicWithMaterials.setMaterials(instituteClassMaterials);
+
+                    return classSubTopicWithMaterials;
+                }).collect(Collectors.toList());
+
+//                System.out.println(record);
+                classTopicWithSubTopicsWithMaterials.setId(topicData.get(0).getId());
+                classTopicWithSubTopicsWithMaterials.setInstituteId(topicData.get(0).getInstituteId());
+                classTopicWithSubTopicsWithMaterials.setClassId(topicData.get(0).getClassId());
+                classTopicWithSubTopicsWithMaterials.setName(topicData.get(0).getName());
+                classTopicWithSubTopicsWithMaterials.setSubTopics(classSubTopicsWithMaterials);
+
+                return classTopicWithSubTopicsWithMaterials;
+            }).collect(Collectors.toList());
+
+            return Response.generate("class topics", HttpStatus.OK, data);
         } else {
             List<InstituteClassTopicsWithSubTopicsProjection> instituteClassTopics = instituteClassTopicRepository.findAllClassTopicsWithSubTopics(classId);
             return Response.generate("class topics", HttpStatus.OK, instituteClassTopics);
         }
-
     }
+
 }

@@ -21,7 +21,8 @@ public interface InstituteClassTopicRepository extends JpaRepository<InstituteCl
             "ict.classId as classId, " +
             "ict.name as name, " +
             "ict.createdAt as createdAt, " +
-            "icst as subTopics " +
+            "icst.id as subTopicId, " +
+            "icst.name as subTopicName " +
             "FROM InstituteClassTopic ict " +
             "LEFT JOIN InstituteClassSubTopic icst ON icst.topicId = ict.id " +
             "WHERE ict.classId = :classId")
@@ -32,13 +33,16 @@ public interface InstituteClassTopicRepository extends JpaRepository<InstituteCl
             "ict.classId as classId, " +
             "ict.name as name, " +
             "ict.createdAt as createdAt, " +
-            "icst as subTopics, " +
-            "icm as materials " +
+            "icst.id as subTopicId, " +
+            "icst.name as subTopicName, " +
+            "icm.id as materialId, " +
+            "icm.type as materialType, " +
+            "icm.url as materialUrl " +
             "FROM InstituteClassTopic ict " +
             "LEFT JOIN InstituteClassSubTopic icst ON icst.topicId = ict.id " +
             "LEFT JOIN InstituteClassMaterial icm ON icm.subTopicId = icst.id " +
             "WHERE ict.classId = :classId")
-    List<InstituteClassTopicsWithSubTopicsAndMaterialsProjection> findAllClassTopicsWithSubTopicsAndMaterials(Long classId);
+    List<InstituteClassTopicsWithSubTopicsProjection> findAllClassTopicsWithSubTopicsAndMaterials(Long classId);
 
     List<InstituteClassTopic> findAllByClassId(Long classId);
 }

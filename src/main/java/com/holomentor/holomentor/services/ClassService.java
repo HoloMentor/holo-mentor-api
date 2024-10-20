@@ -7,7 +7,6 @@ import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.repositories.InstituteClassRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
-import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
