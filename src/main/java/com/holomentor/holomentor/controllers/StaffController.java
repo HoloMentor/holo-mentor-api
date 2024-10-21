@@ -21,9 +21,9 @@ public class StaffController {
             @Valid @PathVariable Long instituteId,
             @Valid @PathVariable Long teacherId,
             @RequestParam(name = "search", defaultValue = "") String search,
-            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name = "limit", defaultValue = "5") Integer pageSize) {
-        return (ResponseEntity<Object>) staffService.getInstituteTeacherStaff(instituteId, teacherId, search, pageNo, pageSize);
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "limit", defaultValue = "5") Integer size) {
+        return staffService.getStaffByTeacherAndInstitute(teacherId, instituteId, page, size);
     }
 
     @GetMapping("/{id}")

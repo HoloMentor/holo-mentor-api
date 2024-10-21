@@ -4,6 +4,8 @@ package com.holomentor.holomentor.repositories;
 import com.holomentor.holomentor.models.TeacherStaff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +14,7 @@ import java.util.Optional;
 public interface TeacherStaffRepository extends JpaRepository<TeacherStaff, Long> {
 
     // Find all TeacherStaff records by institute ID and teacher ID
-    List<TeacherStaff> findAllByInstituteIdAndUserTeacherId(Long instituteId, Long userTeacherId);
+    Page<TeacherStaff> findAllByInstituteIdAndUserTeacherId(Long instituteId, Long teacherId, Pageable pageable);
 
     // Find a TeacherStaff record by its ID
     Optional<TeacherStaff> findById(Long id);

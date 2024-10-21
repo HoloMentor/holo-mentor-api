@@ -2,8 +2,9 @@
 package com.holomentor.holomentor.services;
 
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
+
 import com.holomentor.holomentor.dto.staff.StaffCreateDTO;
 import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.repositories.*;
@@ -15,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class StaffService {
@@ -86,23 +89,41 @@ public class StaffService {
         return Response.generate("Staff user invitation has been sent", HttpStatus.OK);
     }
 
-    public Object getInstituteTeacherStaff(Long instituteId, Long teacherId, String search, Integer pageNo, Integer pageSize) {
-        // fetch teacher staff data
-        Map<String, Object> response = new HashMap<>();
-        response.put("instituteId", instituteId);
-        response.put("teacherId", teacherId);
-        response.put("search", search);
-        response.put("pageNo", pageNo);
-        response.put("pageSize", pageSize);
-        response.put("message", "Fetched teacher staff data successfully.");
-        return response;
+    public ResponseEntity<Object> getStaffByTeacherAndInstitute(Long teacherId, Long instituteId, Integer page, Integer size) {
+        // Step 1: Retrieve paginated staff-teacher mappings for the given teacher and institute
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<TeacherStaff> teacherStaffPage = teacherStaffRepository
+                .findAllByInstituteIdAndUserTeacherId(instituteId, teacherId, pageable);
+
+        // Step 2: Check if the page is empty
+        if (teacherStaffPage.isEmpty()) {
+            return Response.generate("No staff found for the given teacher and institute", HttpStatus.NOT_FOUND);
+        }
+
+        // Step 3: Extract all user IDs (staff members) from the paginated mappings
+        List<Long> staffUserIds = teacherStaffPage.stream()
+                .map(TeacherStaff::getUserStaffId)
+                .collect(Collectors.toList());
+
+        // Step 4: Retrieve all user details for the collected staff user IDs
+        List<User> staffUsers = userRepository.findAllById(staffUserIds);
+
+        // Step 5: Prepare the response with user details and pagination information
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", teacherStaffPage.getTotalPages());
+        data.put("totalItems", teacherStaffPage.getTotalElements());
+        data.put("currentPage", teacherStaffPage.getNumber() + 1);
+        data.put("data", staffUsers);
+        data.put("pageSize", size);
+
+        return Response.generate("Fetched staff members successfully", HttpStatus.OK, data);
     }
 
-    public Object get(Long id) {
+    public ResponseEntity<Object> get(Long id) {
         // fetch the staff member
         Map<String, Object> response = new HashMap<>();
         response.put("staffId", id);
         response.put("message", "Fetched staff data successfully.");
-        return response;
+        return Response.generate("support staff member Found", HttpStatus.OK, response);
     }
 }
