@@ -21,7 +21,7 @@ public class InstituteClassStudent {
     private Long classId;
     private String registrationNumber;
     @Column(insertable = false, updatable = false)
-    private Time createdAt;
+    private String createdAt;
 }
 
 
