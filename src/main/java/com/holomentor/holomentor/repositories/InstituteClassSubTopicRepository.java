@@ -15,4 +15,6 @@ public interface InstituteClassSubTopicRepository extends JpaRepository<Institut
     Optional<InstituteClassSubTopic> findById(Long id);
 
     List<InstituteClassSubTopic> findAllByTopicId(Long topicId);
+
+    void deleteByTopicId(Long topicId);
 }
