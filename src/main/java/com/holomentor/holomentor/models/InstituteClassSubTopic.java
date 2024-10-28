@@ -7,15 +7,16 @@ import java.sql.Time;
 
 @Data
 @Entity
-@Table(name = "institute_subjects")
-public class InstituteSubject {
+@Table(name = "institute_class_sub_topics")
+public class InstituteClassSubTopic {
     @Id
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false)
     private Long instituteId;
+    private Long classId;
+    private Long topicId;
     private String name;
     @Column(insertable = false, updatable = false)
-    private Time createdAt;
+    private String createdAt;
 }

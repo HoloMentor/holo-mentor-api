@@ -18,9 +18,13 @@ public class InstituteClass {
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "teacher_id", nullable = false)
     private Long teacherId;
+    @Column(name = "institute_id", nullable = false)
     private Long instituteId;
+    @Column(name = "institute_teacher_id", nullable = false)
     private Long instituteTeacherId;
+    @Column(name = "subject_id", nullable = false)
     private Long subjectId;
     private String className;
     private Time startTime;
@@ -30,7 +34,15 @@ public class InstituteClass {
     @Column(name = "day_of_week", nullable = false)
     private DayOfWeek dayOfWeek;
     @Column(insertable = false, updatable = false)
-    private Time createdAt;
+    private String createdAt;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "institute_id", insertable=false, updatable=false)
+    private Institute institute;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "subject_id", insertable=false, updatable=false)
+    private InstituteSubject subject;
+
 
     public enum DayOfWeek {
         MON,

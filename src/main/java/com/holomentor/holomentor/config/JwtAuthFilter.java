@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
             } else{
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT was expired or invalid");
             }

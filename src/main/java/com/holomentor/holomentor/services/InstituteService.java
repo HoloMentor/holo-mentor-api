@@ -104,7 +104,7 @@ public class InstituteService {
 
 //        prepare mail dynamic data
         HashMap<String, String> dynamicData = new HashMap<>();
-        String redirectLink = String.format("invitation%s?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
+        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
         dynamicData.put("redirect_link", redirectLink);
 
 //        send mail to the user account

@@ -26,7 +26,7 @@ public class AuthController {
         return authService.create(body);
     }
 
-    @PutMapping("/signup/super-admin")
+    @GetMapping("/signup/super-admin")
     public ResponseEntity<Object> registerSuperAdmin(){
         return authService.createSuperAdmin();
     }

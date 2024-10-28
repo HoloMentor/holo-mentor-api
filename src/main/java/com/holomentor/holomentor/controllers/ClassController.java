@@ -4,6 +4,7 @@ import com.holomentor.holomentor.dto.classes.ClassCreateDTO;
 import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.dto.subject.SubjectUpdateDTO;
 import com.holomentor.holomentor.services.ClassService;
+import com.holomentor.holomentor.services.ClassTopicService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class ClassController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<Object> update(@Valid @PathVariable Long id,@Valid @RequestBody ClassUpdateDTO body){
-        return  classService.update(id, body);
+    public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody ClassUpdateDTO body) {
+        return classService.update(id, body);
     }
 
     @GetMapping("/{id}")
@@ -39,9 +40,9 @@ public class ClassController {
     @GetMapping("/institute/{id}")
     public ResponseEntity<Object> institute(
             @PathVariable Long id,
-            @RequestParam(name="search", defaultValue = "") String search,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "search", defaultValue = "") String search,
+            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "limit", defaultValue = "10") Integer pageSize) {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
 
@@ -49,12 +50,9 @@ public class ClassController {
     public ResponseEntity<Object> getTeacher(
             @PathVariable Long teacherId,
             @PathVariable Long instituteId,
-            @RequestParam(name="search", defaultValue = "") String search,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize
-    ) {
+            @RequestParam(name = "search", defaultValue = "") String search,
+            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "limit", defaultValue = "10") Integer pageSize) {
         return classService.findByTeacherIdAndInstituteId(teacherId, instituteId, search, pageNo, pageSize);
     }
-
-
 }

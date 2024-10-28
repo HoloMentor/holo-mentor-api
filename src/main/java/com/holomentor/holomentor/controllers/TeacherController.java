@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/teachers")
@@ -17,17 +19,8 @@ public class TeacherController {
     private TeacherServices teacherServices;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) {
-        return teacherServices.createTeacher(body);
-    }
-
-    @GetMapping("/institute/{id}")
-    public ResponseEntity<Object> institute(
-            @PathVariable Long id,
-            @RequestParam(name="search", defaultValue = "") String search,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
+    public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) throws IOException {
+        return teacherServices.create(body);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -48,6 +41,22 @@ public class TeacherController {
     @GetMapping("/stats/{id}")
     public ResponseEntity<Object> getTeacherStats(@Valid @PathVariable Long id) {
         return teacherServices.getTeacherStats(id);
+    }
+
+    @GetMapping("/institute/classes/{id}")
+    public ResponseEntity<Object> getInstituteTeacherClasses(@PathVariable Long id,
+                                                    @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+                                                    @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return teacherServices.getInstituteTeacherClasses(id, pageNo, pageSize);
+    }
+
+    @GetMapping("/institute/{id}")
+    public ResponseEntity<Object> institute(
+            @PathVariable Long id,
+            @RequestParam(name="search", defaultValue = "") String search,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
     }
 
 }
