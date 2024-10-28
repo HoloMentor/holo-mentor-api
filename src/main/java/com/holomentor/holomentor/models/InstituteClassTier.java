@@ -7,17 +7,18 @@ import java.sql.Time;
 
 @Data
 @Entity
-@Table(name = "institute_class_sub_topics")
-public class InstituteClassSubTopic {
+@Table(name = "institute_class_tiers")
+public class InstituteClassTier {
     @Id
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(updatable = false)
     private Long instituteId;
+    @Column(updatable = false)
     private Long classId;
-    private Long topicId;
-    private Boolean isDone;
     private String name;
+    private String description;
     @Column(insertable = false, updatable = false)
-    private String createdAt;
+    private Time createdAt;
 }
