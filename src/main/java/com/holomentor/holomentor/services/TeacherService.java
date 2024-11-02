@@ -24,7 +24,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class TeacherServices {
+public class TeacherService {
 
     @Autowired
     private UserRepository userRepository;
