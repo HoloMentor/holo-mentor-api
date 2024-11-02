@@ -72,6 +72,16 @@ public class StudentService {
 
         userInstituteRepository.save(userInstitute);
 
+        InstituteClassStudent instituteClassStudent = new InstituteClassStudent();
+        instituteClassStudent.setStudentId(studentUser.getId());
+        instituteClassStudent.setInstituteId(body.getInstituteId());
+        instituteClassStudent.setClassId(body.getClassId());
+        instituteClassStudent.setInstituteStudentId(userInstitute.getId());
+        instituteClassStudent.setRegistrationNumber(body.getRegistrationNo());
+
+        instituteClassStudentRepository.save(instituteClassStudent);
+
+
         String invitationToken = UUID.randomUUID().toString();
         UserInvitation invitation = new UserInvitation();
         invitation.setToken(invitationToken);
