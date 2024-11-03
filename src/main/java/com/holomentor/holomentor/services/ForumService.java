@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
 
 @Service
 public class ForumService {
@@ -24,7 +26,7 @@ public class ForumService {
     private InstituteClassRepository instituteClassRepository;
 
 
-    public ResponseEntity<Object> create(ForumQuestionCreateDTO body) throws IOException {
+    public ResponseEntity<Object> createMcq(ForumQuestionCreateDTO body) throws IOException {
 
         Optional<InstituteClass> instituteClassResult = instituteClassRepository.findById(body.getClassId());
         if (instituteClassResult.isEmpty()) {
@@ -33,9 +35,18 @@ public class ForumService {
 
 
         ForumQuestion forumQuestion = new ForumQuestion();
+        forumQuestion.setClassId(body.getClassId());
+        forumQuestion.setTopic(body.getTopic());
+        forumQuestion.setSubTopic(body.getSubTopic());
         forumQuestion.setQuestion(body.getQuestion());
         forumQuestion.setUserId(body.getUserId());
+        forumQuestion.setMcqAnswer(body.getAnswersMcq());
         forumQuestion.setVoteCount(0);
+        System.out.println(body.getQuestion());
+        forumQuestion.setQuestion(body.getQuestion());
+
+        System.out.println("here's creates forumquestion model: >>>: "+forumQuestion);
+
 
         forumRepository.save(forumQuestion);
         return Response.generate("question created successfully", HttpStatus.CREATED);
@@ -66,6 +77,26 @@ public class ForumService {
         forumRepository.delete(forumQuestionDelete);
         return Response.generate("question deleted successfully", HttpStatus.OK);
     }
+
+//    public String extractTextContent(Object questionData) {
+//        StringBuilder plainTextQuestion = new StringBuilder();
+//
+//        // Assuming questionData is a List<Map> instead of JSON String
+//        List<Map<String, Object>> questionList = (List<Map<String, Object>>) questionData;
+//
+//        for (Map<String, Object> paragraph : questionList) {
+//            if ("paragraph".equals(paragraph.get("type"))) {
+//                List<Map<String, Object>> contentList = (List<Map<String, Object>>) paragraph.get("content");
+//                for (Map<String, Object> contentItem : contentList) {
+//                    if ("text".equals(contentItem.get("type"))) {
+//                        plainTextQuestion.append(contentItem.get("text")).append(" ");
+//                    }
+//                }
+//            }
+//        }
+//        return plainTextQuestion.toString().trim();
+//    }
+
 }
 
 
