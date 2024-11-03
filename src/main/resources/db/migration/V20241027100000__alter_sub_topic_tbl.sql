@@ -1,0 +1,1 @@
+ALTER TABLE institute_class_sub_topics ADD COLUMN is_done BOOLEAN DEFAULT FALSE;

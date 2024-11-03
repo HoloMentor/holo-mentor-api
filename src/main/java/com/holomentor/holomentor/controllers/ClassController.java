@@ -4,6 +4,7 @@ import com.holomentor.holomentor.dto.classes.ClassCreateDTO;
 import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.dto.subject.SubjectUpdateDTO;
 import com.holomentor.holomentor.services.ClassService;
+import com.holomentor.holomentor.services.ClassTopicService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,5 @@ public class ClassController {
             @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
-
 
 }
