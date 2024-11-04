@@ -1,5 +1,6 @@
 package com.holomentor.holomentor.dto.forum;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.core.util.Json;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

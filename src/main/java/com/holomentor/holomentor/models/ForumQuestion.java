@@ -1,13 +1,13 @@
 package com.holomentor.holomentor.models;
 
 
-import io.swagger.v3.core.util.Json;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.Type;
+
 
 import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.hibernate.annotations.Type;
 
 
 @Data
