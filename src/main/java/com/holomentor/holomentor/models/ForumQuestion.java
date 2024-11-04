@@ -7,7 +7,9 @@ import lombok.Data;
 
 import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 
 @Data
@@ -28,10 +30,13 @@ public class ForumQuestion {
     private String topic;
     @Column(name = "sub_topic",nullable = false)
     private String subTopic;
-    @Column(name = "question",nullable = false,columnDefinition = "json")
-    private Object question;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "question", columnDefinition = "jsonb", nullable = false)
+    private JsonNode question;
     @Column(name = "essay_answer")
     private String essayAnswer;
+    @Column(name = "answer")
+    private String answer;
     @ElementCollection
     @CollectionTable(name = "mcq_answers", joinColumns = @JoinColumn(name = "question_id"))
     @Column(name = "mcq_answer")

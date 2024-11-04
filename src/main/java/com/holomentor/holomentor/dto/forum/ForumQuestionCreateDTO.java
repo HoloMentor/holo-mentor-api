@@ -14,7 +14,7 @@ public class ForumQuestionCreateDTO {
     @NotNull(message = "class ID is required")
     private Long classId;
     @NotNull(message = "question is required")
-    private Object question;
+    private JsonNode question;
     @NotNull(message = "user ID is required")
     private Long userId;
     @NotNull(message = "Topic is Required")
