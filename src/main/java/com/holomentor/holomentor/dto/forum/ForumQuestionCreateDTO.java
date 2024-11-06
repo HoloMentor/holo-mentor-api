@@ -21,6 +21,6 @@ public class ForumQuestionCreateDTO {
     private String topic;
     @NotNull(message = "sub topic is required")
     private String subTopic;
-    private List<String> answersMcq;
+    private JsonNode answers;
     private String answer;
 }

@@ -37,10 +37,7 @@ public class ForumQuestion {
     private String essayAnswer;
     @Column(name = "answer")
     private String answer;
-    @ElementCollection
-    @CollectionTable(name = "mcq_answers", joinColumns = @JoinColumn(name = "question_id"))
-    @Column(name = "mcq_answer")
-    private List<String> mcqAnswer;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<QuestionVotes> votes;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "mcq_answers", columnDefinition = "jsonb")
+    private JsonNode mcqAnswer;
 }

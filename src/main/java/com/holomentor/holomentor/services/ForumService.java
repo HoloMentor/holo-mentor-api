@@ -34,16 +34,15 @@ public class ForumService {
         if (instituteClassResult.isEmpty()) {
             return Response.generate("class not found", HttpStatus.NOT_FOUND);
         }
-//        ObjectMapper mapper = new ObjectMapper();
-//        JsonNode questionJsonNode = mapper.convertValue(body.getQuestion(), JsonNode.class);
-        System.out.println(body.getQuestion());
+
+        System.out.println("here is the body: check answer is comming or not: \n\n"+ body +"\n\n end of body \n\n");
 
         ForumQuestion forumQuestion = new ForumQuestion();
         forumQuestion.setClassId(body.getClassId());
         forumQuestion.setTopic(body.getTopic());
         forumQuestion.setSubTopic(body.getSubTopic());
         forumQuestion.setUserId(body.getUserId());
-//        forumQuestion.setMcqAnswer(body.getAnswersMcq());
+        forumQuestion.setMcqAnswer(body.getAnswers());
         forumQuestion.setVoteCount(0);
         forumQuestion.setQuestion(body.getQuestion());;
         forumQuestion.setAnswer("test");;
@@ -56,26 +55,12 @@ public class ForumService {
     }
 
 
-//    public ResponseEntity<Object> update(Long id,ForumQuestionCreateDTO body) throws IOException{
-//        Optional<ForumQuestion> forumQuestion = forumRepository.findById(id);
-//        if(forumQuestion.isEmpty()){
-//            return Response.generate("forum question not found",HttpStatus.NOT_FOUND);
-//        }
-//        ForumQuestion forumQuestionNew = forumQuestion.get();
-//        forumQuestionNew.setQuestion(body.getQuestion());
-//        forumQuestionNew.setUserId(body.getUserId());
-//        forumQuestionNew.setVoteCount(0);
-//
-//        forumRepository.save(forumQuestionNew);
-//        return Response.generate("question created successfully", HttpStatus.CREATED);
-//    }
 
-    public ResponseEntity<Object> get(Long id) throws IOException {
+    public ResponseEntity<Object> get(Long id) throws IOException{
         Optional<ForumQuestion> forumQuestion = forumRepository.findById(id);
         if(forumQuestion.isEmpty()){
-            return Response.generate("forum question not found",HttpStatus.NOT_FOUND);
+            return Response.generate("forum question not found", HttpStatus.NOT_FOUND);
         }
-
         return Response.generate("forum question", HttpStatus.OK, forumQuestion.get());
     }
 

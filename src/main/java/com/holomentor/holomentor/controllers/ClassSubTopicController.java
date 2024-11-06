@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.controllers;
 
 import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicCreateDTO;
+import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicDoneStateUpdateDTO;
 import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicUpdateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicCreateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicUpdateDTO;
@@ -31,6 +32,11 @@ public class ClassSubTopicController {
     @PatchMapping("/update/{id}")
     public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody ClassSubTopicUpdateDTO body){
         return classSubTopicService.update(id, body);
+    }
+
+   @PatchMapping("/update/state/{id}")
+    public ResponseEntity<Object> updateDoneState(@Valid @PathVariable Long id, @Valid @RequestBody ClassSubTopicDoneStateUpdateDTO body){
+        return classSubTopicService.updateDoneState(id, body);
     }
 
     @GetMapping("/{id}")

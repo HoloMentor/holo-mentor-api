@@ -118,6 +118,7 @@ public class ClassTopicService {
             ClassSubTopicDTO classSubTopic = new ClassSubTopicDTO();
             classSubTopic.setId(subTopicData.get(0).getSubTopicId());
             classSubTopic.setName(subTopicData.get(0).getSubTopicName());
+            classSubTopic.setIsDone(subTopicData.get(0).getSubTopicIsDone());
 
             if(withMaterials) {
                 List<ClassSubTopicMaterialDTO> classSubTopicMaterials = getClassSubTopicMaterials(subTopicData);

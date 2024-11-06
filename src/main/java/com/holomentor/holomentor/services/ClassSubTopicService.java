@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicCreateDTO;
+import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicDoneStateUpdateDTO;
 import com.holomentor.holomentor.dto.classSubTopic.ClassSubTopicUpdateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicCreateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicUpdateDTO;
@@ -47,6 +48,18 @@ public class ClassSubTopicService {
 
         instituteClassSubTopicRepository.save(instituteClassSubTopic);
         return Response.generate("class sub topic have been updated.", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> updateDoneState(Long id, ClassSubTopicDoneStateUpdateDTO body) {
+        Optional<InstituteClassSubTopic> instituteClassSubTopicResult = instituteClassSubTopicRepository.findById(id);
+        if (instituteClassSubTopicResult.isEmpty()) {
+            return Response.generate("class sub topic not found", HttpStatus.NOT_FOUND);
+        }
+        InstituteClassSubTopic instituteClassSubTopic = instituteClassSubTopicResult.get();
+        instituteClassSubTopic.setIsDone(body.getIsDone());
+
+        instituteClassSubTopicRepository.save(instituteClassSubTopic);
+        return Response.generate("class sub topic state has been updated.", HttpStatus.OK);
     }
 
     public ResponseEntity<Object> delete(Long subTopicId) {

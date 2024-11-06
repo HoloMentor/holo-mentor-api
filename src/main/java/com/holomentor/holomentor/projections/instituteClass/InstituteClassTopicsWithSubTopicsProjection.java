@@ -12,6 +12,7 @@ public interface InstituteClassTopicsWithSubTopicsProjection {
     String getCreatedAt();
     Long getSubTopicId();
     String getSubTopicName();
+    Boolean getSubTopicIsDone();
     Long getMaterialId();
     InstituteClassMaterial.ClassMaterialType getMaterialType();
     String getMaterialUrl();

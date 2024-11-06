@@ -10,5 +10,6 @@ import java.util.List;
 public class ClassSubTopicDTO {
     private Long id;
     private String name;
+    private Boolean isDone;
     private List<ClassSubTopicMaterialDTO> materials;
 }
