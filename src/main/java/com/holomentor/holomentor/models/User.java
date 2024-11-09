@@ -39,6 +39,7 @@ public class User {
     private Boolean isBlacklisted = false;
     @Column(insertable = false, updatable = false)
     private String createdAt;
+    private Boolean isDeleted;
 
     public enum RoleTypes {
         SUPER_ADMIN,
