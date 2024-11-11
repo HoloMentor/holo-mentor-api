@@ -36,6 +36,8 @@ public class StaffService {
     private Environment environment;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private UserInvitationRepository userInvitationRepository;
 
     public ResponseEntity<Object> create(StaffCreateDTO body) throws IOException {
         // Check if the staff member already exists
@@ -74,9 +76,20 @@ public class StaffService {
         teacherStaff.setInstituteId(body.getInstituteId());
         teacherStaffRepository.save(teacherStaff);
 
+        //create user invitation
+        String invitationToken = UUID.randomUUID().toString();
+        UserInvitation invitation = new UserInvitation();
+        invitation.setToken(invitationToken);
+        invitation.setIsValid(true);
+        invitation.setUserId(staffUser.getId());
+        invitation.setInstituteId(body.getInstituteId());
+        invitation.setUserInstituteId(userInstitute.getId());
+
+        userInvitationRepository.save(invitation);
+
         // Send registration email
         HashMap<String, String> dynamicData = new HashMap<>();
-        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), UUID.randomUUID().toString(), existingUser.isEmpty());
+        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, existingUser.isEmpty());
         dynamicData.put("redirect_link", redirectLink);
 
         mailService.sendMail(
