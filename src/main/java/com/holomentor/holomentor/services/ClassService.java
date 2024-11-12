@@ -21,9 +21,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
 
-
-
-
 @Service
 @Transactional
 public class ClassService {
@@ -46,16 +43,15 @@ public class ClassService {
         instituteClass.setTeacherId(body.getTeacherId());
 
         Optional<UserInstitute> optionalUser = userInstituteRepository.findByUserIdAndInstituteIdAndRole(
-                                        body.getTeacherId(),
-                                        body.getInstituteId(),
-                                        UserInstitute.RoleTypes.TEACHER);
+                body.getTeacherId(),
+                body.getInstituteId(),
+                UserInstitute.RoleTypes.TEACHER);
 
         if (optionalUser.isPresent()) {
             instituteClass.setInstituteTeacherId(optionalUser.get().getId());
             instituteClassRepository.save(instituteClass);
             return Response.generate("Class created successfully", HttpStatus.OK);
-        }
-        else{
+        } else {
             return Response.generate("User not found", HttpStatus.NOT_FOUND);
         }
     }
@@ -87,10 +83,10 @@ public class ClassService {
         return Response.generate("Updated", HttpStatus.OK);
     }
 
-
     public ResponseEntity<Object> findByInstituteId(Long instituteId, String search, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<InstituteClassProjection> instituteClassList = instituteClassRepository.findByClassByInstitute(search, instituteId, pageable);
+        Page<InstituteClassProjection> instituteClassList = instituteClassRepository.findByClassByInstitute(search,
+                instituteId, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", instituteClassList.getTotalPages());
@@ -106,6 +102,5 @@ public class ClassService {
 
         return Response.generate("class details", HttpStatus.OK, classResult.get());
     }
-
 
 }

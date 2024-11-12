@@ -89,6 +89,7 @@ public class AuthService {
             UserInstitute userInstitute = new UserInstitute();
             userInstitute.setInstituteId(institute.getId());
             userInstitute.setUserId(user.getId());
+            userInstitute.setIsActive(true);
             userInstitute.setRole(UserInstitute.RoleTypes.INSTITUTE);
             userInstituteRepository.save(userInstitute);
 
@@ -241,6 +242,12 @@ public class AuthService {
 //        check if the user exists
         if(user.isEmpty()){
             return Response.generate("user not registered to the system", HttpStatus.NOT_FOUND);
+        }
+        if(user.get().getIsDeleted()){
+            return Response.generate("user account has been deleted. please contact the administrators", HttpStatus.UNAUTHORIZED);
+        }
+        if(user.get().getIsBlacklisted()){
+            return Response.generate("user account has been suspended. please contact the administrators", HttpStatus.METHOD_NOT_ALLOWED);
         }
 //        get user registered institutes
         List<UserInstitute> userInstitutes = userInstituteRepository.findByUserEmail(email);

@@ -34,5 +34,4 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
 
     Page<InstituteTeacherClassProjection> findInstituteClassesByInstituteTeacherId(Long teacherId, Pageable pageable);
 
-
 }
