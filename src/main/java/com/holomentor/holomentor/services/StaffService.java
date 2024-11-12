@@ -95,7 +95,7 @@ public class StaffService {
         mailService.sendMail(
                 SendGridMail.TemplateNames.STAFF_REGISTRATION,
                 staffUser.getEmail(),
-                "Invitation to Register as a Staff Member",
+                "Invitation to Register as a Supporting Staff Member",
                 dynamicData
         );
 
