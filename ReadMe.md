@@ -63,4 +63,6 @@ To create new SQL script files you can use `flyway.sh` bash script file. To crea
 ```bash
 # in powershell
 sh flyway.sh "alter users table"
+# or 
+bash flyway.sh "alter users table"
 ```

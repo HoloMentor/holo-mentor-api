@@ -1,6 +1,5 @@
 package com.holomentor.holomentor.repositories;
 
-import com.holomentor.holomentor.models.InstituteClassTier;
 import com.holomentor.holomentor.models.InstituteClassTierStudent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,4 @@ public interface InstituteClassTierStudentRepository extends JpaRepository<Insti
     Optional<InstituteClassTierStudent> findById(Long id);
 
     List<InstituteClassTierStudent> findByClassId(Long id);
-
-    List<InstituteClassTierStudent> findByTierId(Long id);
 }
