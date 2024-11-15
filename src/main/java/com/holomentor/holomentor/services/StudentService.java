@@ -97,9 +97,9 @@ public class StudentService {
         dynamicData.put("redirect_link", redirectLink);
 
         mailService.sendMail(
-                SendGridMail.TemplateNames.TEACHER_REGISTRATION,
+                SendGridMail.TemplateNames.STUDENT_REGISTRATION,
                 studentUser.getEmail(),
-                "Invitation to Register as a Teacher",
+                "Invitation to Register as a Student",
                 dynamicData
         );
 
