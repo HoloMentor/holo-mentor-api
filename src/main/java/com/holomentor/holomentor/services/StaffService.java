@@ -45,15 +45,25 @@ public class StaffService {
         User staffUser = new User();
 
         if (existingUser.isEmpty()) {
-            staffUser.setFirstName(body.getFirstName());
-            staffUser.setLastName(body.getLastName());
-            staffUser.setEmail(body.getEmail());
+
+            User newStaffUser = new User();
+            newStaffUser.setFirstName(body.getFirstName());
+            newStaffUser.setLastName(body.getLastName());
+            newStaffUser.setEmail(body.getEmail());
 
             // Generate a random password
             String randomPassword = UUID.randomUUID().toString();
-            staffUser.setPassword(passwordEncoder.encode(randomPassword));
+            newStaffUser.setPassword(passwordEncoder.encode(randomPassword));
 
-            userRepository.save(staffUser);
+            //create new user
+            userRepository.save(newStaffUser);
+
+            staffUser.setId(newStaffUser.getId());
+            staffUser.setEmail(newStaffUser.getEmail());
+            staffUser.setFirstName(newStaffUser.getFirstName());
+            staffUser.setLastName(newStaffUser.getLastName());
+
+
         } else {
             staffUser.setId(existingUser.get().getId());
             staffUser.setFirstName(existingUser.get().getFirstName());
@@ -78,6 +88,7 @@ public class StaffService {
 
         //create user invitation
         String invitationToken = UUID.randomUUID().toString();
+
         UserInvitation invitation = new UserInvitation();
         invitation.setToken(invitationToken);
         invitation.setIsValid(true);
