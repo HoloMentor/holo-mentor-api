@@ -18,8 +18,6 @@ public class InstituteClassTierStudent {
     @Column(updatable = false)
     private Long classId;
     @Column(updatable = false)
-    private Long tierId;
-    @Column(updatable = false)
     private Long studentId;
     @Column(insertable = false, updatable = false)
     private Time createdAt;
