@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class StaffService {
@@ -39,6 +42,8 @@ public class StaffService {
     @Autowired
     private UserInvitationRepository userInvitationRepository;
 
+    //to check logs
+    private static final Logger logger = LoggerFactory.getLogger(StaffService.class);
     public ResponseEntity<Object> create(StaffCreateDTO body) throws IOException {
         // Check if the staff member already exists
         Optional<User> existingUser = userRepository.findByEmail(body.getEmail());
@@ -100,8 +105,12 @@ public class StaffService {
 
         // Send registration email
         HashMap<String, String> dynamicData = new HashMap<>();
-        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, existingUser.isEmpty());
-        dynamicData.put("redirect_link", redirectLink);
+        String redirectLink = String.format("%s/invitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, existingUser.isEmpty());
+        String loginLink= "http://localhost:3000/";
+
+        //put dynamicData
+        dynamicData.put("login_link",loginLink);
+        dynamicData.put("redirect_link",redirectLink);
 
         mailService.sendMail(
                 SendGridMail.TemplateNames.STAFF_REGISTRATION,
@@ -114,25 +123,25 @@ public class StaffService {
     }
 
     public ResponseEntity<Object> getStaffByTeacherAndInstitute(Long teacherId, Long instituteId, Integer page, Integer size) {
-        // Step 1: Retrieve paginated staff-teacher mappings for the given teacher and institute
+        // Retrieve paginated staff-teacher mappings for the given teacher and institute
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TeacherStaff> teacherStaffPage = teacherStaffRepository
                 .findAllByInstituteIdAndUserTeacherId(instituteId, teacherId, pageable);
 
-        // Step 2: Check if the page is empty
+        // Check if the page is empty
         if (teacherStaffPage.isEmpty()) {
             return Response.generate("No staff found for the given teacher and institute", HttpStatus.NOT_FOUND);
         }
 
-        // Step 3: Extract all user IDs (staff members) from the paginated mappings
+        // Extract all user IDs (staff members) from the paginated mappings
         List<Long> staffUserIds = teacherStaffPage.stream()
                 .map(TeacherStaff::getUserStaffId)
                 .collect(Collectors.toList());
 
-        // Step 4: Retrieve all user details for the collected staff user IDs
+        // Retrieve all user details for the collected staff user IDs
         List<User> staffUsers = userRepository.findAllById(staffUserIds);
 
-        // Step 5: Prepare the response with user details and pagination information
+        // pagination information
         Map<String, Object> data = new HashMap<>();
         data.put("pages", teacherStaffPage.getTotalPages());
         data.put("totalItems", teacherStaffPage.getTotalElements());
