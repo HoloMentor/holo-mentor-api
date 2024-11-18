@@ -159,4 +159,23 @@ public class StaffService {
         response.put("message", "Fetched staff data successfully.");
         return Response.generate("support staff member Found", HttpStatus.OK, response);
     }
+
+    public ResponseEntity<Object> delete(Long staffId) {
+        // Fetch the user by ID
+        Optional<User> userOptional = userRepository.findById(staffId);
+        if (userOptional.isEmpty()) {
+            return Response.generate("Staff member not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Update the `isDeleted` field to true
+        User user = userOptional.get();
+        user.setIsDeleted(true);
+        userRepository.save(user);
+
+        // Log the deletion
+        logger.info("Staff member with ID {} marked as deleted.", staffId);
+
+        // Return response
+        return Response.generate("Staff member deleted successfully", HttpStatus.OK);
+    }
 }
