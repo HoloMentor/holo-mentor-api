@@ -81,7 +81,6 @@ public class StudentService {
 
         instituteClassStudentRepository.save(instituteClassStudent);
 
-
         String invitationToken = UUID.randomUUID().toString();
         UserInvitation invitation = new UserInvitation();
         invitation.setToken(invitationToken);
@@ -117,4 +116,3 @@ public class StudentService {
         return Response.generate("teacher's classes", HttpStatus.OK, data);
     }
 }
-

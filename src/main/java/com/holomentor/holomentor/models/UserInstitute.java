@@ -37,6 +37,7 @@ public class UserInstitute {
         STUDENT,
         TEACHER,
         STAFF,
-        INSTITUTE
+        INSTITUTE,
+
     }
 }

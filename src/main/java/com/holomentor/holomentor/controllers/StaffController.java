@@ -35,4 +35,9 @@ public class StaffController {
     public ResponseEntity<Object> createStaff(@Valid @RequestBody StaffCreateDTO body) throws IOException {
         return staffService.create(body);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteStaff(@PathVariable @Valid Long id) {
+        return staffService.delete(id);
+    }
 }
