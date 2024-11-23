@@ -7,4 +7,7 @@ public interface InstituteClassProjection {
     String getFirstName();
     String getLastName();
     Long getStudentCount();
+    String getDayOfWeek();
+    String getStartTime();
+    String getEndTime();
 }

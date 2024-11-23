@@ -45,4 +45,11 @@ public class InstituteController {
     public ResponseEntity<Object> delete(@PathVariable @Valid Long id, @RequestBody InstituteUpdateDTO body){
         return instituteService.update(id, body);
     }
+
+    @GetMapping("/classes/teacher/{teacherId}/institute/{instituteId}/grouped-by-subject")
+    public ResponseEntity<Object> getGroupedClassesByTeacherAndInstitute(
+            @PathVariable Long teacherId,
+            @PathVariable Long instituteId) {
+        return instituteService.getGroupedClassesByTeacherAndInstitute(teacherId, instituteId);
+    }
 }
