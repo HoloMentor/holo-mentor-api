@@ -17,6 +17,10 @@ public class StudentController {
     @Autowired
     private StudentService studentServices;
 
+    @PostMapping("/create")
+    public ResponseEntity<Object> create(@Valid @RequestBody StudentCreateDTO body) throws IOException {
+        return studentServices.create(body);
+    }
 
 
 }
