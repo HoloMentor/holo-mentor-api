@@ -44,4 +44,67 @@ public class StudentService {
     private InstituteClassStudentRepository instituteClassStudentRepository;
 
 
+    public ResponseEntity<Object> create(StudentCreateDTO body) throws IOException {
+
+        Optional<User> userExists = userRepository.findByEmail(body.getEmail());
+
+        User studentUser = new User();
+
+        if(userExists.isEmpty()){
+            studentUser.setEmail(body.getEmail());
+            studentUser.setFirstName(body.getFirstName());
+            studentUser.setLastName(body.getLastName());
+
+            String randomPassword = UUID.randomUUID().toString();
+            studentUser.setPassword(passwordEncoder.encode(randomPassword));
+
+            userRepository.save(studentUser);
+        } else {
+            studentUser.setId(userExists.get().getId());
+            studentUser.setEmail(body.getEmail());
+            studentUser.setFirstName(body.getFirstName());
+            studentUser.setLastName(body.getLastName());
+        }
+
+        UserInstitute userInstitute = new UserInstitute();
+        userInstitute.setInstituteId(body.getInstituteId());
+        userInstitute.setUserId(studentUser.getId());
+        userInstitute.setRole(UserInstitute.RoleTypes.STUDENT);
+
+        userInstituteRepository.save(userInstitute);
+
+        InstituteClassStudent instituteClassStudent = new InstituteClassStudent();
+        instituteClassStudent.setStudentId(studentUser.getId());
+        instituteClassStudent.setInstituteId(body.getInstituteId());
+        instituteClassStudent.setClassId(body.getClassId());
+        instituteClassStudent.setInstituteStudentId(userInstitute.getId());
+        instituteClassStudent.setRegistrationNumber(body.getRegistrationNo());
+
+        instituteClassStudentRepository.save(instituteClassStudent);
+
+        String invitationToken = UUID.randomUUID().toString();
+        UserInvitation invitation = new UserInvitation();
+        invitation.setToken(invitationToken);
+        invitation.setIsValid(true);
+        invitation.setUserId(studentUser.getId());
+        invitation.setInstituteId(body.getInstituteId());
+        invitation.setUserInstituteId(userInstitute.getId());
+
+        userInvitationRepository.save(invitation);
+
+        HashMap<String, String> dynamicData = new HashMap<>();
+        String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
+        dynamicData.put("redirect_link", redirectLink);
+
+        mailService.sendMail(
+                SendGridMail.TemplateNames.STUDENT_REGISTRATION,
+                studentUser.getEmail(),
+                "Invitation to Register as a Student",
+                dynamicData
+        );
+
+        return Response.generate("new student created", HttpStatus.CREATED);
+    }
+
+
 }
