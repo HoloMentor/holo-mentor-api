@@ -1,8 +1,11 @@
 package com.holomentor.holomentor.services;
 
+import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.dto.studyPlan.StudyPlanCreateTaskDTO;
 import com.holomentor.holomentor.dto.studyPlanTask.StudyPlanTaskCreateDTO;
+import com.holomentor.holomentor.dto.studyPlanTask.StudyPlanTaskUpdateDTO;
 import com.holomentor.holomentor.models.ClassTierStudyPlanTask;
+import com.holomentor.holomentor.models.Institute;
 import com.holomentor.holomentor.repositories.ClassTierStudyPlanTaskRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
@@ -49,5 +52,18 @@ public class StudyPlanTaskService {
         classTierStudyPlanTaskRepository.delete(studyPlanTasks.get());
 
         return Response.generate("class tier study plan task details deleted", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> update(Long id, StudyPlanTaskUpdateDTO body) {
+        Optional<ClassTierStudyPlanTask> studyPlanTask = classTierStudyPlanTaskRepository.findById(id);
+        if (studyPlanTask.isEmpty()) {
+            return Response.generate("class tier study plan task not found", HttpStatus.NOT_FOUND);
+        }
+        ClassTierStudyPlanTask institute = studyPlanTask.get();
+        institute.setTitle(body.getTitle());
+        institute.setDescription(body.getDescription());
+
+        classTierStudyPlanTaskRepository.save(institute);
+        return Response.generate("class tier study plan task details have been updated.", HttpStatus.OK);
     }
 }

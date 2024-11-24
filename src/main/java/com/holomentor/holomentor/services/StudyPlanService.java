@@ -3,6 +3,7 @@ package com.holomentor.holomentor.services;
 import com.holomentor.holomentor.dto.classes.ClassCreateDTO;
 import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.dto.studyPlan.StudyPlanCreateDTO;
+import com.holomentor.holomentor.dto.studyPlan.StudyPlanUpdateDTO;
 import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.repositories.*;
@@ -107,14 +108,14 @@ public class StudyPlanService {
 
         classTierStudyPlanRepository.save(classTierStudyPlan);
 
-        List<ClassTierStudyPlanTask> classTierStudyPlanTasks = body.getTasks().stream().map(studyPlanTask -> {
+        List<ClassTierStudyPlanTask> classTierStudyPlanTasks = body.getTasks().stream().map(studyPlan -> {
             ClassTierStudyPlanTask task = new ClassTierStudyPlanTask();
 
             task.setClassId(body.getClassId());
             task.setInstituteId(body.getInstituteId());
             task.setStudyPlanId(classTierStudyPlan.getId());
-            task.setTitle(studyPlanTask.getTitle());
-            task.setDescription(studyPlanTask.getDescription());
+            task.setTitle(studyPlan.getTitle());
+            task.setDescription(studyPlan.getDescription());
 
             return task;
         }).collect(Collectors.toList());
@@ -138,5 +139,19 @@ public class StudyPlanService {
         classTierStudyPlanRepository.delete(classTierStudyPlan.get());
 
         return Response.generate("class tier study plans details deleted", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> update(Long id, StudyPlanUpdateDTO body) {
+        Optional<ClassTierStudyPlan> studyPlanResult = classTierStudyPlanRepository.findById(id);
+        if (studyPlanResult.isEmpty()) {
+            return Response.generate("class tier study plan not found", HttpStatus.NOT_FOUND);
+        }
+        ClassTierStudyPlan studyPlan = studyPlanResult.get();
+        studyPlan.setName(body.getName());
+        studyPlan.setDescription(body.getDescription());
+
+        classTierStudyPlanRepository.save(studyPlan);
+
+        return Response.generate("class tier study plan details have been updated.", HttpStatus.OK);
     }
 }

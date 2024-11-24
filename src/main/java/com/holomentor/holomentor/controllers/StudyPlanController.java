@@ -1,6 +1,8 @@
 package com.holomentor.holomentor.controllers;
 
 import com.holomentor.holomentor.dto.studyPlan.StudyPlanCreateDTO;
+import com.holomentor.holomentor.dto.studyPlan.StudyPlanUpdateDTO;
+import com.holomentor.holomentor.dto.studyPlanTask.StudyPlanTaskUpdateDTO;
 import com.holomentor.holomentor.models.InstituteClassStudent;
 import com.holomentor.holomentor.repositories.InstituteClassStudentRepository;
 import com.holomentor.holomentor.services.StudyPlanService;
@@ -49,5 +51,10 @@ public class StudyPlanController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable @Valid Long id) {
         return studyPlanService.delete(id);
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<Object> update(@PathVariable @Valid Long id, @RequestBody StudyPlanUpdateDTO body) {
+        return studyPlanService.update(id, body);
     }
 }
