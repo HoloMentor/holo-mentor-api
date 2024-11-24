@@ -36,7 +36,6 @@ public class SubjectController {
             @RequestParam(name="search", defaultValue = "") String search,
             @RequestParam(name="page", defaultValue = "1") Integer pageNo,
             @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        System.out.println(instituteId);
         return subjectService.getInstituteSubjects(instituteId, search, pageNo, pageSize);
     }
 
