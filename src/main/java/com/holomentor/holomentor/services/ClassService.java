@@ -96,11 +96,6 @@ public class ClassService {
 
     public ResponseEntity<Object> get(Long id) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
-        if (classResult.isEmpty()) {
-            return Response.generate("Class not found", HttpStatus.NOT_FOUND);
-        }
-
-        return Response.generate("class details", HttpStatus.OK, classResult.get());
+        return classResult.map(instituteClass -> Response.generate("class details", HttpStatus.OK, instituteClass)).orElseGet(() -> Response.generate("Class not found", HttpStatus.NOT_FOUND));
     }
-
 }
