@@ -106,5 +106,16 @@ public class StudentService {
         return Response.generate("new student created", HttpStatus.CREATED);
     }
 
+    public ResponseEntity<Object> findStudentsByClassId(Long id, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<InstituteClassStudentProjection> instituteClassStudents = instituteClassStudentRepository.findStudentsByClassId(id, pageable);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", instituteClassStudents.getTotalPages());
+        data.put("data", instituteClassStudents.getContent());
+
+        return Response.generate("teacher's classes", HttpStatus.OK, data);
+    }
+
 
 }
