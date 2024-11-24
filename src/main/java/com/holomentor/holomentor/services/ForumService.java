@@ -64,6 +64,15 @@ public class ForumService {
         return Response.generate("forum question", HttpStatus.OK, forumQuestion.get());
     }
 
+    public ResponseEntity<Object> getAll() throws IOException{
+        List<ForumQuestion> forumQuestions = forumRepository.findAll();
+        if(forumQuestions.isEmpty()){
+            return Response.generate("No Questions to show", HttpStatus.NOT_FOUND);
+        }
+        else return Response.generate("forum Question List", HttpStatus.OK, forumQuestions);
+
+    }
+
 
     public ResponseEntity<Object> delete(Long id) throws IOException{
         Optional<ForumQuestion> forumQuestion = forumRepository.findById(id);

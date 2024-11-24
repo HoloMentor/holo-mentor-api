@@ -28,4 +28,14 @@ public class ForumController {
         return forumService.get(id);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAll() throws IOException{
+        return forumService.getAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable @Valid Long id)throws IOException{
+        return forumService.delete(id);
+    }
+
 }
