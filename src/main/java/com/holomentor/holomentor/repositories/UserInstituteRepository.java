@@ -34,6 +34,7 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
             "AND s.instituteId = :instituteId " +
             "AND s.isActive = :isActive " +
             "AND s.role = 'TEACHER'")
-    Page<InstituteTeacherProjection> findByInstituteIdTeachersAndIsActive( String name, Long instituteId, Boolean isActive, Pageable pageable);
+    Page<InstituteTeacherProjection> findByInstituteIdTeachersAndIsActive(String name, Long instituteId,
+            Boolean isActive, Pageable pageable);
 
 }
