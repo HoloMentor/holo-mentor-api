@@ -2,7 +2,7 @@ package com.holomentor.holomentor.controllers;
 
 import com.holomentor.holomentor.dto.teacher.TeacherCreateDTO;
 import com.holomentor.holomentor.dto.teacher.TeacherUpdateDTO;
-import com.holomentor.holomentor.services.TeacherServices;
+import com.holomentor.holomentor.services.TeacherService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,38 +16,39 @@ import java.io.IOException;
 public class TeacherController {
 
     @Autowired
-    private TeacherServices teacherServices;
+    private TeacherService teacherService;
 
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) throws IOException {
-        return teacherServices.create(body);
+        return teacherService.create(body);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        return teacherServices.delete(id);
+        return teacherService.delete(id);
     }
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody TeacherUpdateDTO body) {
-        return teacherServices.update(id, body);
+        return teacherService.update(id, body);
     }
 
-    @GetMapping("/fetch/{id}")
-    public ResponseEntity<Object> getTeacher(@Valid @PathVariable Long id) {
-        return teacherServices.getTeacherById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> get(@Valid @PathVariable Long id) {
+        return teacherService.get(id);
     }
 
     @GetMapping("/stats/{id}")
     public ResponseEntity<Object> getTeacherStats(@Valid @PathVariable Long id) {
-        return teacherServices.getTeacherStats(id);
+        return teacherService.getTeacherStats(id);
     }
 
     @GetMapping("/institute/classes/{id}")
-    public ResponseEntity<Object> getInstituteTeacherClasses(@PathVariable Long id,
-                                                    @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-                                                    @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        return teacherServices.getInstituteTeacherClasses(id, pageNo, pageSize);
+    public ResponseEntity<Object> getInstituteTeacherClasses(
+            @PathVariable Long id,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return teacherService.getInstituteTeacherClasses(id, pageNo, pageSize);
     }
 
     @GetMapping("/institute/{id}")
@@ -56,7 +57,7 @@ public class TeacherController {
             @RequestParam(name="search", defaultValue = "") String search,
             @RequestParam(name="page", defaultValue = "1") Integer pageNo,
             @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
+        return teacherService.getTeachersByInstituteId(id, search, pageNo, pageSize);
     }
 
 }
