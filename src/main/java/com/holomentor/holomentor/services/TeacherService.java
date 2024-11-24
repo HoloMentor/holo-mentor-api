@@ -24,7 +24,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class TeacherServices {
+public class TeacherService {
 
     @Autowired
     private UserRepository userRepository;
@@ -142,11 +142,11 @@ public class TeacherServices {
         return Response.generate("teacher not found", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Object> getTeacherById(Long id) {
+    public ResponseEntity<Object> get(Long id) {
         Optional<User> teacher = userRepository.findById(id);
         if(teacher.isPresent()) {
             User user = teacher.get();
-            return Response.generate("teacher found", HttpStatus.OK);
+            return Response.generate("teacher found", HttpStatus.OK,user);
         }
 
         return Response.generate("teacher not found", HttpStatus.NOT_FOUND);

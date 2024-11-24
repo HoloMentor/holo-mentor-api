@@ -5,4 +5,5 @@ public interface InstituteTeacherProjection {
     String getFirstName();
     String getLastName();
     String getImage();
+    Long getNoOfClasses();
 }
