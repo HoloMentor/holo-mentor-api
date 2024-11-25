@@ -1,30 +1,33 @@
 package com.holomentor.holomentor.services;
 
+import com.holomentor.holomentor.dto.teacher.TeacherCreateDTO;
 import com.holomentor.holomentor.dto.teacher.TeacherUpdateDTO;
 import com.holomentor.holomentor.models.*;
+import com.holomentor.holomentor.projections.student.InstituteStudentClassProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherProjection;
 import com.holomentor.holomentor.repositories.*;
 import com.holomentor.holomentor.utils.Response;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import com.holomentor.holomentor.dto.teacher.TeacherCreateDTO;
 
-import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.util.*;
 
 @Service
 @Transactional
-public class TeacherServices {
+public class StudentServices {
 
     @Autowired
     private UserRepository userRepository;
@@ -144,7 +147,7 @@ public class TeacherServices {
 
     public ResponseEntity<Object> getTeacherById(Long id) {
         Optional<User> teacher = userRepository.findById(id);
-        if(teacher.isPresent()) {
+        if (teacher.isPresent()) {
             User user = teacher.get();
             return Response.generate("teacher found", HttpStatus.OK);
         }
@@ -167,6 +170,146 @@ public class TeacherServices {
         data.put("data", institutesClasses.getContent());
 
         return Response.generate("teacher's classes", HttpStatus.OK, data);
+    }
+
+    //    get institute student entolled classes
+    public ResponseEntity<Object> getEnrolledClasses(Long studentId, String search, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser authUser = (AuthUser) (auth).getPrincipal();
+
+        // get classes by student id
+        Long userID = authUser.getUserId();
+        Page<InstituteStudentClassProjection> classes = instituteClassRepository.findClassesByStudentId(userID, pageable);
+
+        // Group classes by teacher ID
+        Map<Long, List<Map<String, Object>>> classesByTeacher = new HashMap<>();
+        for (InstituteStudentClassProjection cls : classes.getContent()) {
+            Long teacherId = cls.getTeacherId();
+
+            Map<String, Object> classData = new HashMap<>();
+            classData.put("id", cls.getId());
+            classData.put("className", cls.getClassName());
+            classData.put("studentCount", cls.getStudentCount());
+            classData.put("subjectName", cls.getSubjectName());
+            classData.put("teacherFirstName", cls.getTeacherFirstName());
+            classData.put("teacherLastName", cls.getTeacherLastName());
+
+            classesByTeacher.computeIfAbsent(teacherId, k -> new ArrayList<>()).add(classData);
+        }
+
+        // Format response data
+        List<Map<String, Object>> teacherGroupedData = new ArrayList<>();
+        for (Map.Entry<Long, List<Map<String, Object>>> entry : classesByTeacher.entrySet()) {
+            Map<String, Object> teacherData = new HashMap<>();
+            teacherData.put("teacherId", entry.getKey());
+            teacherData.put("classes", entry.getValue());
+            teacherData.put("teacherFirstName", entry.getValue().get(0).get("teacherFirstName"));
+            teacherData.put("teacherLastName", entry.getValue().get(0).get("teacherLastName"));
+
+            teacherGroupedData.add(teacherData);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", classes.getTotalPages());
+        data.put("data", teacherGroupedData);
+
+        return Response.generate("classes", HttpStatus.OK, data);
+
+
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("pages", classes.getTotalPages());
+//        data.put("data", classes.getContent());
+//
+//        return Response.generate("classes", HttpStatus.OK, data);
+
+
+//        Page<InstituteClassProjection> classes = instituteClassRepository.findByClassByInstitute(search, studentId, pageable);
+
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+
+//        {
+//            "data": {
+//            "principal": {
+//                "id": 5,
+//                        "userId": 4,
+//                        "instituteId": 1,
+//                        "firstName": "Nicholle",
+//                        "lastName": "Kinghorn",
+//                        "email": "student@mailinator.com",
+//                        "password": "$2a$10$euioLsnb4INH2x6MqwULBOQXJ4o3a.jKsxixW.HqliQGKyFxty4D.",
+//                        "role": "STUDENT",
+//                        "userRole": "USER",
+//                        "enabled": true,
+//                        "authorities": [
+//                {
+//                    "authority": "STUDENT"
+//                }
+//            ],
+//                "username": "student@mailinator.com",
+//                        "accountNonLocked": true,
+//                        "accountNonExpired": true,
+//                        "credentialsNonExpired": true
+//            },
+//            "credentials": null,
+//                    "name": "student@mailinator.com",
+//                    "details": {
+//                "remoteAddress": "0:0:0:0:0:0:0:1",
+//                        "sessionId": null
+//            },
+//            "class": "org.springframework.security.authentication.UsernamePasswordAuthenticationToken",
+//                    "email": "student@mailinator.com",
+//                    "authorities": [
+//            {
+//                "authority": "STUDENT"
+//            }
+//        ]
+//        },
+//            "message": "classes",
+//                "status": 200
+//        }
+
+//        get user id from getPrincipal
+
+
+//        dump all data in SecurityContextHolder.getContext().getAuthentication() and store in a map
+
+
+//        Map<String, Object> data = new HashMap<>();
+//
+//
+//
+//        String email = authUser.getEmail();
+//        String userId = authUser.getUserId().toString();
+//
+//
+////        print email
+//        System.out.println(authUser.getEmail());
+//        System.out.println(authUser.getUserId());
+//
+////        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+////        AuthUser authUser = (AuthUser) (auth).getPrincipal();
+//
+//
+//        data.put("email", SecurityContextHolder.getContext().getAuthentication().getName());
+//        data.put("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        data.put("authorities", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+//        data.put("credentials", SecurityContextHolder.getContext().getAuthentication().getCredentials());
+//        data.put("details", SecurityContextHolder.getContext().getAuthentication().getDetails());
+//        data.put("name", SecurityContextHolder.getContext().getAuthentication().getName());
+//        data.put("class", SecurityContextHolder.getContext().getAuthentication().getClass());
+////        data.put("userId", ((Map<String, Object>) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get("userId"));
+////        data.put("instituteId", ((Map<String, Object>) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get("instituteId"));
+//
+//
+//
+//
+////        data.put("pages", classes.getTotalPages());
+////        data.put("data", classes.getContent());
+//
+//        return Response.generate("classes", HttpStatus.OK, data);
     }
 
 
