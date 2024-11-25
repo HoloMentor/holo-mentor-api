@@ -3,10 +3,8 @@ package com.holomentor.holomentor.services;
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
 import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.models.*;
-import com.holomentor.holomentor.repositories.InstituteRepository;
-import com.holomentor.holomentor.repositories.UserInstituteRepository;
-import com.holomentor.holomentor.repositories.UserInvitationRepository;
-import com.holomentor.holomentor.repositories.UserRepository;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.repositories.*;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,6 +38,9 @@ public class InstituteService {
     private MailService mailService;
     @Autowired
     private Environment environment;
+    @Autowired
+    private InstituteClassRepository instituteClassRepository;
+
 
     public ResponseEntity<Object> create(InstituteCreateDTO body) throws IOException {
 //        create institute
@@ -165,4 +164,21 @@ public class InstituteService {
         instituteRepository.save(institute);
         return Response.generate("institute details have been updated.", HttpStatus.OK);
     }
+
+    public ResponseEntity<Object> getGroupedClassesByTeacherAndInstitute(Long teacherId, Long instituteId) {
+        // call queary
+        List<InstituteClassProjection> classes = instituteClassRepository.findClassesGroupedByTeacherAndInstitute(teacherId, instituteId);
+
+        if (classes.isEmpty()) {
+            return Response.generate("No classes found for the specified teacher and institute.", HttpStatus.NOT_FOUND);
+        }
+
+        // Grouping classes by subject name
+        Map<String, List<InstituteClassProjection>> groupedClasses = classes.stream()
+                .collect(Collectors.groupingBy(InstituteClassProjection::getSubjectName));
+
+        return Response.generate("Grouped classes retrieved successfully.", HttpStatus.OK, groupedClasses);
+    }
+
+
 }
