@@ -3,6 +3,7 @@ package com.holomentor.holomentor.repositories;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
+import com.holomentor.holomentor.projections.student.InstituteStudentClassProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,4 +51,23 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "WHERE s.instituteId = :instituteId AND c.teacherId = :teacherId " +
             "GROUP BY s.name, c.className, u.firstName, u.lastName, c.dayOfWeek, c.startTime, c.endTime")
     List<InstituteClassProjection> findClassesGroupedByTeacherAndInstitute(Long teacherId, Long instituteId);
+
+    @Query("SELECT c.id as id, " +
+            "c.className as className, " +
+            "s.name as subjectName, " +
+            "c.teacherId as teacherId, " +
+            "u.firstName as teacherFirstName, " +
+            "u.lastName as teacherLastName, " +
+            "COUNT(DISTINCT cs.studentId) as studentCount " +
+            "FROM InstituteClass c " +
+            "LEFT JOIN InstituteSubject s ON s.id = c.subjectId " +
+            "LEFT JOIN InstituteClassStudent cs ON c.id = cs.classId " +
+            "LEFT JOIN User u ON c.teacherId = u.id " +
+            "WHERE cs.studentId = :studentId " +
+            "GROUP BY c.id, c.className, s.name, u.firstName, u.lastName")
+    Page<InstituteStudentClassProjection> findClassesByStudentId(Long studentId, Pageable pageable);
+
+
+
+
 }
