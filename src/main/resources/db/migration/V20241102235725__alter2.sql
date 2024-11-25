@@ -1,0 +1,3 @@
+ALTER TABLE forum_questions
+ADD COLUMN topic VARCHAR NOT NULL,
+ADD COLUMN sub_topic VARCHAR NOT NULL;

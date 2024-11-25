@@ -35,6 +35,7 @@ public interface InstituteClassTopicRepository extends JpaRepository<InstituteCl
             "ict.createdAt as createdAt, " +
             "icst.id as subTopicId, " +
             "icst.name as subTopicName, " +
+            "icst.isDone as subTopicIsDone, " +
             "icm.id as materialId, " +
             "icm.type as materialType, " +
             "icm.url as materialUrl " +

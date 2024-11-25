@@ -1,5 +1,7 @@
 package com.holomentor.holomentor.controllers;
 
+import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
+import com.holomentor.holomentor.dto.user.UserSuspendDTO;
 import com.holomentor.holomentor.dto.user.UserUpdateDTO;
 import com.holomentor.holomentor.dto.user.UserUpdateInfoDTO;
 import com.holomentor.holomentor.services.UserService;
@@ -20,6 +22,14 @@ public class  UserController {
         return userService.get(id);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAll(
+            @RequestParam(name="search", defaultValue = "") String search,
+            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+        return userService.getAll(search, pageNo, pageSize);
+    }
+
     @PatchMapping("/update/user/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable @Valid Long id, @RequestBody @Valid UserUpdateDTO body) {
         return userService.updateUser(id, body);
@@ -28,5 +38,15 @@ public class  UserController {
     @PatchMapping("/update/info/{id}")
     public ResponseEntity<Object> updateInfo(@PathVariable @Valid Long id, @RequestBody @Valid UserUpdateInfoDTO body) {
         return userService.updateInfo(id, body);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable @Valid Long id){
+        return userService.delete(id);
+    }
+
+    @PatchMapping("/suspend/{id}")
+    public ResponseEntity<Object> suspend(@PathVariable @Valid Long id, @RequestBody UserSuspendDTO body){
+        return userService.suspend(id, body);
     }
 }

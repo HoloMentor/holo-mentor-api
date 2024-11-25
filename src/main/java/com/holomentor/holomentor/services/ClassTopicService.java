@@ -7,6 +7,8 @@ import com.holomentor.holomentor.dto.classTopic.ClassTopicUpdateDTO;
 import com.holomentor.holomentor.dto.classTopic.ClassTopicWithSubTopicsDTO;
 import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassTopicsWithSubTopicsProjection;
+import com.holomentor.holomentor.repositories.InstituteClassMaterialRepository;
+import com.holomentor.holomentor.repositories.InstituteClassSubTopicRepository;
 import com.holomentor.holomentor.repositories.InstituteClassTopicRepository;
 import com.holomentor.holomentor.utils.Response;
 import jakarta.transaction.Transactional;
@@ -23,6 +25,10 @@ import java.util.stream.Collectors;
 public class ClassTopicService {
     @Autowired
     private InstituteClassTopicRepository instituteClassTopicRepository;
+    @Autowired
+    private InstituteClassMaterialRepository instituteClassMaterialRepository;
+    @Autowired
+    private InstituteClassSubTopicRepository instituteClassSubTopicRepository;
 
     public ResponseEntity<Object> create(ClassTopicCreateDTO body) {
         InstituteClassTopic instituteClassTopic = new InstituteClassTopic();
@@ -53,6 +59,8 @@ public class ClassTopicService {
             return Response.generate("class topic not found", HttpStatus.NOT_FOUND);
         }
 
+        instituteClassMaterialRepository.deleteByTopicId(topicId);
+        instituteClassSubTopicRepository.deleteByTopicId(topicId);
         instituteClassTopicRepository.delete(instituteClassTopicResult.get());
 
         return Response.generate("class topic deleted", HttpStatus.OK);
@@ -64,7 +72,7 @@ public class ClassTopicService {
             return Response.generate("class topic not found", HttpStatus.NOT_FOUND);
         }
 
-        return Response.generate("class topic deleted", HttpStatus.OK, instituteClassTopicResult.get());
+        return Response.generate("class topic", HttpStatus.OK, instituteClassTopicResult.get());
     }
 
     public ResponseEntity<Object> getClassTopics(Long classId, Boolean withMaterials) {
@@ -110,6 +118,7 @@ public class ClassTopicService {
             ClassSubTopicDTO classSubTopic = new ClassSubTopicDTO();
             classSubTopic.setId(subTopicData.get(0).getSubTopicId());
             classSubTopic.setName(subTopicData.get(0).getSubTopicName());
+            classSubTopic.setIsDone(subTopicData.get(0).getSubTopicIsDone());
 
             if(withMaterials) {
                 List<ClassSubTopicMaterialDTO> classSubTopicMaterials = getClassSubTopicMaterials(subTopicData);
@@ -124,7 +133,7 @@ public class ClassTopicService {
 
 //    extract the materials related to a sub topic
     private List<ClassSubTopicMaterialDTO> getClassSubTopicMaterials(List<InstituteClassTopicsWithSubTopicsProjection> subTopicData) {
-        List<ClassSubTopicMaterialDTO> classSubTopicMaterials = subTopicData.stream().map(subTopicMaterial -> {
+        List<ClassSubTopicMaterialDTO> classSubTopicMaterials = subTopicData.stream().filter(record -> record.getMaterialId() != null).map(subTopicMaterial -> {
             ClassSubTopicMaterialDTO classSubTopicMaterial = new ClassSubTopicMaterialDTO();
             classSubTopicMaterial.setId(subTopicMaterial.getMaterialId());
             classSubTopicMaterial.setType(subTopicMaterial.getMaterialType());

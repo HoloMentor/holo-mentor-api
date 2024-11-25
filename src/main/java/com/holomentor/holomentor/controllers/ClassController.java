@@ -28,7 +28,7 @@ public class ClassController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<Object> update(@Valid @PathVariable Long id,@Valid @RequestBody ClassUpdateDTO body){
+    public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody ClassUpdateDTO body) {
         return classService.update(id, body);
     }
 
@@ -40,9 +40,9 @@ public class ClassController {
     @GetMapping("/institute/{id}")
     public ResponseEntity<Object> institute(
             @PathVariable Long id,
-            @RequestParam(name="search", defaultValue = "") String search,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "search", defaultValue = "") String search,
+            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "limit", defaultValue = "10") Integer pageSize) {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
 

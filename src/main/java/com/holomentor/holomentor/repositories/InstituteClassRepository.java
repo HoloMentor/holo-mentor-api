@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,6 +35,22 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
     Page<InstituteClassProjection> findByClassByInstitute(String name, Long instituteId, Pageable pageable);
 
     Page<InstituteTeacherClassProjection> findInstituteClassesByInstituteTeacherId(Long teacherId, Pageable pageable);
+
+    @Query("SELECT s.name as subjectName, " +
+            "c.className as className, " +
+            "u.firstName as firstName, " +
+            "u.lastName as lastName, " +
+            "COUNT(DISTINCT cs.studentId) as studentCount, " +
+            "c.dayOfWeek as dayOfWeek, " +
+            "c.startTime as startTime, " +
+            "c.endTime as endTime " +
+            "FROM InstituteClass c " +
+            "LEFT JOIN InstituteSubject s ON s.id = c.subjectId " +
+            "LEFT JOIN InstituteClassStudent cs ON c.id = cs.classId " +
+            "LEFT JOIN User u ON c.teacherId = u.id " +
+            "WHERE s.instituteId = :instituteId AND c.teacherId = :teacherId " +
+            "GROUP BY s.name, c.className, u.firstName, u.lastName, c.dayOfWeek, c.startTime, c.endTime")
+    List<InstituteClassProjection> findClassesGroupedByTeacherAndInstitute(Long teacherId, Long instituteId);
 
     @Query("SELECT c.id as id, " +
             "c.className as className, " +

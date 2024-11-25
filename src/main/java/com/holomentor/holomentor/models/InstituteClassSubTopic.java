@@ -16,6 +16,7 @@ public class InstituteClassSubTopic {
     private Long instituteId;
     private Long classId;
     private Long topicId;
+    private Boolean isDone;
     private String name;
     @Column(insertable = false, updatable = false)
     private String createdAt;
