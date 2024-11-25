@@ -13,6 +13,7 @@ import java.io.IOException;
 @RequestMapping("students")
 public class StudentController {
 
+
     @Autowired
     private StudentService studentServices;
 
@@ -28,5 +29,6 @@ public class StudentController {
             @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
         return studentServices.findStudentsByClassId(classId, pageNo, pageSize);
     }
+
 
 }

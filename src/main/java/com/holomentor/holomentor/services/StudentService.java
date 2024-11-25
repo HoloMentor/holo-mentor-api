@@ -43,6 +43,7 @@ public class StudentService {
     @Autowired
     private InstituteClassStudentRepository instituteClassStudentRepository;
 
+
     public ResponseEntity<Object> create(StudentCreateDTO body) throws IOException {
 
         Optional<User> userExists = userRepository.findByEmail(body.getEmail());
@@ -115,4 +116,6 @@ public class StudentService {
 
         return Response.generate("teacher's classes", HttpStatus.OK, data);
     }
+
+
 }

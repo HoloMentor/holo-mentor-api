@@ -72,7 +72,7 @@ public class ClassTopicService {
             return Response.generate("class topic not found", HttpStatus.NOT_FOUND);
         }
 
-        return Response.generate("class topic deleted", HttpStatus.OK, instituteClassTopicResult.get());
+        return Response.generate("class topic", HttpStatus.OK, instituteClassTopicResult.get());
     }
 
     public ResponseEntity<Object> getClassTopics(Long classId, Boolean withMaterials) {

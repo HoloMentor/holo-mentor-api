@@ -109,7 +109,7 @@ public class TeacherService {
         data.put("pages", teachers.getTotalPages());
         data.put("data", teachers.getContent());
 
-        return Response.generate("teachers Found", HttpStatus.OK, data);
+        return Response.generate("teachers found", HttpStatus.OK, data);
     }
 
     public ResponseEntity<Object> delete(Long teacherId) {
