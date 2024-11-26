@@ -22,5 +22,6 @@ public class ForumQuestionCreateDTO {
     @NotNull(message = "sub topic is required")
     private String subTopic;
     private JsonNode answers;
+    private int voteCount;
     private String answer;
 }

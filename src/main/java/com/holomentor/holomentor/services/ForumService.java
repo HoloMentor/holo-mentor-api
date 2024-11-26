@@ -84,6 +84,23 @@ public class ForumService {
         return Response.generate("question deleted successfully", HttpStatus.OK);
     }
 
+    public ResponseEntity<Object> updateMcq(Long id,ForumQuestionCreateDTO body) throws IOException{
+        Optional<ForumQuestion> forumQuestion = forumRepository.findById(id);
+        if(forumQuestion.isEmpty()){
+            return Response.generate("Forum question not found", HttpStatus.NOT_FOUND);
+        }
+        ForumQuestion forumQuestionUpdate = forumQuestion.get();
+        forumQuestionUpdate.setClassId(body.getClassId());
+        forumQuestionUpdate.setTopic(body.getTopic());
+        forumQuestionUpdate.setSubTopic(body.getSubTopic());
+        forumQuestionUpdate.setUserId(body.getUserId());
+        forumQuestionUpdate.setMcqAnswer(body.getAnswers());
+        forumQuestionUpdate.setVoteCount(body.getVoteCount());
+
+        forumRepository.save(forumQuestionUpdate);
+        return Response.generate("Mcq updated succesfully", HttpStatus.OK)
+    }
+
 
 
 }

@@ -23,6 +23,14 @@ public class ForumController {
         return forumService.createMcq(body);
     }
 
+
+    @PatchMapping({"/{id}/update/mcq", "/{id}/update/essay"})
+    public ResponseEntity<Object> updateMcq(@PathVariable @Valid Long id, @RequestBody ForumQuestionCreateDTO body) throws IOException{
+        return forumService.updateMcq(id, body);
+    }
+
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable @Valid Long id) throws IOException   {
         return forumService.get(id);
