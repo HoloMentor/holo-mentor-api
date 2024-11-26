@@ -16,7 +16,7 @@ public class StaffController {
     @Autowired
     private StaffService staffService;
 
-    @GetMapping("staff/{instituteId}/{teacherId}")
+    @GetMapping("/{instituteId}/{teacherId}")
     public ResponseEntity<Object> getInstituteTeacherStaff(
             @Valid @PathVariable Long instituteId,
             @Valid @PathVariable Long teacherId,
