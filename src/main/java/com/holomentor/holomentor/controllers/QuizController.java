@@ -5,6 +5,7 @@ package com.holomentor.holomentor.controllers;
 // import com.holomentor.holomentor.services.QuizQuestionsDTO;
 // import com.holomentor.holomentor.models.User;
 // import com.holomentor.holomentor.dto.quiz.*;
+import com.holomentor.holomentor.models.CustomQuiz;
 import com.holomentor.holomentor.services.QuizService;
 // import com.holomentor.holomentor.services.QuizSubmissionDTO;
 // import com.holomentor.holomentor.services.QuizUpdateDTO;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/quiz")
 public class QuizController {
@@ -35,6 +38,7 @@ public class QuizController {
     public ResponseEntity<Object> getQuizzes(@PathVariable Long class_id, @PathVariable Long user_id) {
         return quizService.getQuizzesByUserIdAndClassId(user_id, class_id);
     }
+
 
     // @SuppressWarnings("null")
     // @GetMapping("{class_id}/{user_id}/get_quizzes")

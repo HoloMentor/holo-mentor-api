@@ -98,7 +98,7 @@ public class ForumService {
         forumQuestionUpdate.setVoteCount(body.getVoteCount());
 
         forumRepository.save(forumQuestionUpdate);
-        return Response.generate("Mcq updated succesfully", HttpStatus.OK)
+        return Response.generate("Mcq updated succesfully", HttpStatus.OK);
     }
 
 
