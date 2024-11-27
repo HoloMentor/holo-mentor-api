@@ -1,16 +1,12 @@
-package com.holomentor.holomentor.dto.forum;
+package com.holomentor.holomentor.dto.quizzes;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.v3.core.util.Json;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import java.util.List;
-import java.util.Map;
 
 @Data
-public class ForumQuestionCreateDTO {
-    @NotNull(message = "email is required")
-    private String email;
+public class QuizQuestionCreateDTO {
+
     @NotNull(message = "class ID is required")
     private Long classId;
     @NotNull(message = "question is required")
@@ -21,7 +17,8 @@ public class ForumQuestionCreateDTO {
     private String topic;
     @NotNull(message = "sub topic is required")
     private String subTopic;
+    @NotNull(message = "multipe choices are requires")
     private JsonNode answers;
-    private int voteCount;
-    private String answer;
+    @NotNull(message = "correct answer is required")
+    private Long correctAnswer;
 }
