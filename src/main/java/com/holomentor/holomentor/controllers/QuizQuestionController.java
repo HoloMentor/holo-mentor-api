@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -23,8 +20,22 @@ public class QuizQuestionController {
     private QuizeQuestionService quizeQuestionService;
     @PostMapping("/add")
     public ResponseEntity<Object> createQuestionForQuiz(@Valid @RequestBody QuizQuestionCreateDTO body) throws IOException{
-        System.out.println("1st margin");
         System.out.println(body);
         return quizeQuestionService.createQuestionForQuize(body);
+    }
+
+    @GetMapping("/view")
+    public ResponseEntity<Object> getAll() throws IOException{
+        return quizeQuestionService.getAll();
+    }
+
+    @PatchMapping("/deactivate/{id}")
+    public ResponseEntity<Object> deactivateQuestion(@PathVariable @Valid Long id) throws IOException{
+        return quizeQuestionService.deactivateQuestion(id);
+    }
+
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<Object> activateQuestion(@PathVariable @Valid Long id) throws IOException{
+        return quizeQuestionService.activateQuestion(id);
     }
 }
