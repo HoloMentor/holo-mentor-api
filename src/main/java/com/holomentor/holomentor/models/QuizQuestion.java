@@ -30,4 +30,6 @@ public class QuizQuestion {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "mcq_answers", columnDefinition = "jsonb")
     private JsonNode mcqAnswer;
+    @Column(name = "activation")
+    private int activation;
 }
