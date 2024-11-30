@@ -13,7 +13,8 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Id> {
+// public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Id> {
+public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
     Optional<QuizQuestion> findById(Long Id);
 
     @Transactional
