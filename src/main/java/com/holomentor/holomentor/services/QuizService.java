@@ -24,8 +24,7 @@ public class QuizService {
     }
 
     public ResponseEntity<Object> getQuizStats(Long user_id , Long institute_id) {
-        long quizCount = quizRepository.countMCQQuizzesByTeacherAndInstitute(user_id , institute_id);
-
+        long quizCount = quizRepository.countQuizzes(user_id , institute_id);
         return Response.generate("quiz statistics are found", HttpStatus.OK, quizCount);
     }
 

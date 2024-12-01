@@ -14,9 +14,9 @@ public interface QuizRepository extends JpaRepository<CustomQuiz, Long> {
     // New method to get the count of MCQ quizzes
     @Query("SELECT COUNT(m.id) " +
             "FROM QuizQuestion m " +
-            "JOIN InstituteClass ic ON m.classId = ic.id " +
+            "LEFT JOIN InstituteClass ic ON m.classId = ic.id " +
             "WHERE ic.teacherId = :teacherId " +
             "AND ic.instituteId = :instituteId")
-    long countMCQQuizzesByTeacherAndInstitute(Long teacherId, Long instituteId);
+    long countQuizzes(Long teacherId, Long instituteId);
 
 }

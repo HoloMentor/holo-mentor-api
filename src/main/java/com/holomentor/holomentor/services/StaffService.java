@@ -183,6 +183,12 @@ public class StaffService {
         return Response.generate("support staff member Found", HttpStatus.OK, response);
     }
 
+    public ResponseEntity<Object> getTeacherStaffCount(Long user_id , Long institute_id) {
+        long staffCount = teacherStaffRepository.countTeacherStaff(user_id , institute_id);
+        System.out.println("Count - "+ staffCount);
+        return Response.generate("quiz statistics are found", HttpStatus.OK, staffCount);
+    }
+
     public ResponseEntity<Object> delete(Long staffId) {
         // Fetch the user by ID
         Optional<User> userOptional = userRepository.findById(staffId);
