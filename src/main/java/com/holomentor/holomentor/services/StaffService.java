@@ -1,6 +1,7 @@
 // StaffService.java
 package com.holomentor.holomentor.services;
 
+import com.holomentor.holomentor.projections.user.UserInstituteProjection;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -138,9 +139,10 @@ public class StaffService {
                 .map(TeacherStaff::getUserStaffId)
                 .collect(Collectors.toList());
 
+
         // Retrieve all user details for the collected staff user IDs
         List<User> staffUsers = userRepository.findAllById(staffUserIds);
-
+        logger.info("List contents: {}", staffUsers);
         // pagination information
         Map<String, Object> data = new HashMap<>();
         data.put("pages", teacherStaffPage.getTotalPages());
@@ -152,10 +154,31 @@ public class StaffService {
         return Response.generate("Fetched staff members successfully", HttpStatus.OK, data);
     }
 
-    public ResponseEntity<Object> get(Long id) {
+    public ResponseEntity<Object> get(Long id ) {
         // fetch the staff member
+
+        Optional<User> user = userRepository.findById(id);
+
+        Optional<TeacherStaff> teacherStaff = teacherStaffRepository.findById(id);
+
         Map<String, Object> response = new HashMap<>();
+
         response.put("staffId", id);
+
+        response.put("message", "Fetched staff data successfully.");
+        return Response.generate("support staff member Found", HttpStatus.OK, response);
+    }
+
+    public ResponseEntity<Object> getTeacherData(Long userId , Long instituteId ) {
+        // fetch the staff member
+
+        Optional<User> user = userRepository.findById(userId);
+
+        List<UserInstituteProjection> teacherStaff = teacherStaffRepository.findDetailsByUserIdAndInstituteId(userId, instituteId);
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("staffTeacher",teacherStaff);
+        response.put("staffUserId", userId);
         response.put("message", "Fetched staff data successfully.");
         return Response.generate("support staff member Found", HttpStatus.OK, response);
     }

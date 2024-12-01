@@ -39,6 +39,12 @@ public class QuizController {
         return quizService.getQuizzesByUserIdAndClassId(user_id, class_id);
     }
 
+    @GetMapping("/quiz/count/{user_id}/{class_id}")
+    public ResponseEntity<Object> getQuizStats(@PathVariable Long user_id,
+                                               @PathVariable Long class_id) {
+        return quizService.getQuizStats(user_id,class_id);
+    }
+
 
     // @SuppressWarnings("null")
     // @GetMapping("{class_id}/{user_id}/get_quizzes")
