@@ -1,5 +1,7 @@
 package com.holomentor.holomentor.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holomentor.holomentor.dto.classes.ClassCreateDTO;
 import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.dto.studyPlan.StudyPlanCreateDTO;
@@ -26,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,9 @@ public class StudyPlanService {
 
     @Autowired
     private ClassTierStudyPlanTaskRepository classTierStudyPlanTaskRepository;
+
+    @Autowired
+    private StudyPlanTaskSubmissionRepository studyPlanTaskSubmissionRepository;
 
     public ResponseEntity<Object> createTiers(Integer classId, Integer marksOutOf, MultipartFile file)
             throws IOException {
@@ -179,18 +185,18 @@ public class StudyPlanService {
     // [{"id":"1733136529517","url":"http://localhost:8080/api/v1/files/1733136529492/A_Form_with_translations.pdf","name":"A_Form_with_translations.pdf"},{"id":"1733136532976","url":"http://localhost:8080/api/v1/files/1733136532916/A_Form_with_translations
     // (1).pdf","name":"A_Form_with_translations (1).pdf"}]
 
-    // // materials array in the body
-
-    // @PostMapping("/study-plans/task/submit/{userId}/{classId}/{studyPlanId}/{taskId}")
-    // public ResponseEntity<Object> submitStudyPlanTask(
-    // @PathVariable Long userId,
-    // @PathVariable Long classId,
-    // @PathVariable Long studyPlanId,
-    // @PathVariable Long taskId,
-    // @RequestBody String materials) {
-    // return studyPlanService.submitStudyPlanTask(userId, classId, studyPlanId,
-    // taskId, materials);
-    // }
+    // table for study plan task submission
+    // CREATE TABLE IF NOT EXISTS "study_plan_task_submissions" (
+    // id serial primary key,
+    // task_id serial constraint fk_class_tier_study_plan_task references
+    // class_tier_study_plan_tasks,
+    // student_id serial constraint fk_users references users,
+    // institute_id serial constraint fk_institute references institutes,
+    // class_id serial constraint fk_institute_class references institute_classes,
+    // submission_date timestamp null,
+    // submission json not null,
+    // created_at timestamp default CURRENT_TIMESTAMP
+    // );
 
     public ResponseEntity<Object> submitStudyPlanTask(Long userId, Long classId, Long studyPlanId, Long taskId,
             String materials) {
@@ -199,7 +205,7 @@ public class StudyPlanService {
         if (taskResult.isEmpty()) {
             return Response.generate("task not found", HttpStatus.NOT_FOUND);
         }
-        ClassTierStudyPlanTask task = taskResult.get();
+        // ClassTierStudyPlanTask task = taskResult.get();
 
         // get the student
         InstituteClassStudent instituteClassStudent = instituteClassStudentRepository.findByClassIdAndStudentId(classId,
@@ -212,26 +218,36 @@ public class StudyPlanService {
         if (studyPlanResult.isEmpty()) {
             return Response.generate("study plan not found", HttpStatus.NOT_FOUND);
         }
-        ClassTierStudyPlan studyPlan = studyPlanResult.get();
+        // ClassTierStudyPlan studyPlan = studyPlanResult.get();
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode materialsJson = mapper.readTree(materials);
 
-        // TODO save the submission to the database
-        // create new table
-        // create repository and stuff
+            // check if submission already exists
+            StudyPlanTaskSubmission existingSubmission = studyPlanTaskSubmissionRepository
+                    .findByTaskIdAndStudentId(taskId, userId);
 
-        // save the submission
-        // ClassTierStudyPlanTaskSubmission submission = new ClassTierStudyPlanTaskSubmission();
-        // submission.setClassId(classId);
-        // submission.setInstituteId(instituteClassStudent.getInstituteId());
-        // submission.setStudyPlanId(studyPlanId);
-        // submission.setTaskId(taskId);
-        // submission.setStudentId(userId);
-        // submission.setMaterials(materials);
+            if (existingSubmission != null) {
+                // update the submission
+                existingSubmission.setSubmission(materialsJson);
+                studyPlanTaskSubmissionRepository.save(existingSubmission);
+                return Response.generate("study plan task submission updated", HttpStatus.OK);
+            }
 
-        // // save the submission
-        // classTierStudyPlanTaskSubmissionRepository.save(submission);
+            StudyPlanTaskSubmission submission = new StudyPlanTaskSubmission();
+            submission.setTaskId(taskId);
+            submission.setStudentId(userId);
+            submission.setInstituteId(instituteClassStudent.getInstituteId());
+            submission.setClassId(classId);
+            submission.setSubmission(materialsJson);
 
-        return Response.generate("study plan task submitted", HttpStatus.OK);
+            studyPlanTaskSubmissionRepository.save(submission);
+
+            return Response.generate("study plan task submitted", HttpStatus.OK);
+        } catch (Exception e) {
+            return Response.generate("Error processing submission: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
