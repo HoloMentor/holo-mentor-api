@@ -35,8 +35,6 @@ public class ForumService {
             return Response.generate("class not found", HttpStatus.NOT_FOUND);
         }
 
-        System.out.println("here is the body: check answer is comming or not: \n\n"+ body +"\n\n end of body \n\n");
-
         ForumQuestion forumQuestion = new ForumQuestion();
         forumQuestion.setClassId(body.getClassId());
         forumQuestion.setTopic(body.getTopic());
@@ -47,7 +45,6 @@ public class ForumService {
         forumQuestion.setQuestion(body.getQuestion());;
         forumQuestion.setAnswer("test");;
 
-        System.out.println("here's creates forumquestion model: >>>: "+forumQuestion);
 
 
         forumRepository.save(forumQuestion);
