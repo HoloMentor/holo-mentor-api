@@ -46,4 +46,9 @@ public class ClassController {
         return classService.findByInstituteId(id, search, pageNo, pageSize);
     }
 
+    @GetMapping("/student/stats/{InstituteId}/{TeacherId}")
+    public ResponseEntity<Object> getClassStudentStat(@PathVariable Long InstituteId ,@PathVariable Long TeacherId){
+        return classService.getClassStudentStat(InstituteId,TeacherId);
+    }
+
 }
