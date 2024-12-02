@@ -1,9 +1,11 @@
 package com.holomentor.holomentor.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+@Data
 @Entity
 @Table(name = "question_votes")
 public class QuestionVotes {
@@ -18,7 +20,16 @@ public class QuestionVotes {
     @Column(name = "vote_type" , nullable = false)
     private VoteTypes voteType;
 
-    private enum VoteTypes{
+    @PrePersist
+    @PreUpdate
+    private void validateVoteType(){
+        if(voteType == null){
+            voteType = VoteTypes.NONE;
+        }
+
+    }
+
+    public enum VoteTypes{
         NONE,
         VOTE_UP,
         VOTE_DOWN
