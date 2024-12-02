@@ -2,6 +2,7 @@ package com.holomentor.holomentor.controllers;
 
 import com.holomentor.holomentor.services.StudentService;
 import com.holomentor.holomentor.services.StudentServices;
+import com.holomentor.holomentor.services.StudyPlanService;
 import com.holomentor.holomentor.dto.student.StudentCreateDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +15,14 @@ import java.io.IOException;
 @RequestMapping("/students")
 public class StudentController {
 
-    // @Autowired
-    // private TeacherServices teacherServices;
-
     @Autowired
     private StudentServices studentServices;
 
     @Autowired
     private StudentService studentService;
 
-   
-
-    //    test
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
+    @Autowired
+    private StudyPlanService studyPlanService;
 
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody StudentCreateDTO body) throws IOException {
@@ -39,63 +32,43 @@ public class StudentController {
     @GetMapping("/class/{classId}")
     public ResponseEntity<Object> getInstituteStudentClasses(
             @PathVariable Long classId,
-            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
+            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "limit", defaultValue = "10") Integer pageSize) {
         return studentService.findStudentsByClassId(classId, pageNo, pageSize);
     }
 
-
-    //    get enrolled classes of current student
+    // get enrolled classes of current student
     @GetMapping("/classes")
     public ResponseEntity<Object> getEnrolledClasses() {
         return studentServices.getEnrolledClasses(1L, "", 1, 10);
     }
 
-//    get class topics when given class id
-//    @GetMapping("/class/{id}/topics")
-//    public ResponseEntity<Object> getClassTopics(@PathVariable Long id) {
-//        return studentServices.getClassTopics(id);
-//    }
+    // get study plans when given student id and class id
+    @GetMapping("/study-plans/{classId}/{studentId}")
+    public ResponseEntity<Object> getStudyPlans(@PathVariable Long classId, @PathVariable Long studentId) {
+        return studyPlanService.getStudyPlans(classId, studentId);
+    }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Object> create(@Valid @RequestBody TeacherCreateDTO body) throws IOException {
-//        return teacherServices.create(body);
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<Object> delete(@PathVariable Long id) {
-//        return teacherServices.delete(id);
-//    }
-//
-//    @PatchMapping("/update/{id}")
-//    public ResponseEntity<Object> update(@Valid @PathVariable Long id, @Valid @RequestBody TeacherUpdateDTO body) {
-//        return teacherServices.update(id, body);
-//    }
-//
-//    @GetMapping("/fetch/{id}")
-//    public ResponseEntity<Object> getTeacher(@Valid @PathVariable Long id) {
-//        return teacherServices.getTeacherById(id);
-//    }
-//
-//    @GetMapping("/stats/{id}")
-//    public ResponseEntity<Object> getTeacherStats(@Valid @PathVariable Long id) {
-//        return teacherServices.getTeacherStats(id);
-//    }
-//
-//    @GetMapping("/institute/classes/{id}")
-//    public ResponseEntity<Object> getInstituteTeacherClasses(@PathVariable Long id,
-//                                                    @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-//                                                    @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-//        return teacherServices.getInstituteTeacherClasses(id, pageNo, pageSize);
-//    }
-//
-//    @GetMapping("/institute/{id}")
-//    public ResponseEntity<Object> institute(
-//            @PathVariable Long id,
-//            @RequestParam(name="search", defaultValue = "") String search,
-//            @RequestParam(name="page", defaultValue = "1") Integer pageNo,
-//            @RequestParam(name="limit", defaultValue = "10") Integer pageSize) {
-//        return teacherServices.getTeachersByInstituteId(id, search, pageNo, pageSize);
-//    }
+    // add submission to study plan tasks
+    // /study-plan/task/submit/${userId}/${classId}/${studyPlanId}/${taskId}
+    // [{"id":"1733136529517","url":"http://localhost:8080/api/v1/files/1733136529492/A_Form_with_translations.pdf","name":"A_Form_with_translations.pdf"},{"id":"1733136532976","url":"http://localhost:8080/api/v1/files/1733136532916/A_Form_with_translations (1).pdf","name":"A_Form_with_translations (1).pdf"}]
+    @PostMapping("/study-plans/task/submit/{userId}/{classId}/{studyPlanId}/{taskId}")
+    public ResponseEntity<Object> submitStudyPlanTask(
+            @PathVariable Long userId,
+            @PathVariable Long classId,
+            @PathVariable Long studyPlanId,
+            @PathVariable Long taskId,
+            @RequestBody String materials) {
+        return studyPlanService.submitStudyPlanTask(userId, classId, studyPlanId, taskId, materials);
+    }
 
+    // students/study-plans/task/materials/${userId}/${classId}/${studyPlanId}/${taskId}
+    @GetMapping("/study-plans/task/materials/{userId}/{classId}/{studyPlanId}/{taskId}")
+    public ResponseEntity<Object> getStudyPlanTaskMaterials(
+            @PathVariable Long userId,
+            @PathVariable Long classId,
+            @PathVariable Long studyPlanId,
+            @PathVariable Long taskId) {
+        return studyPlanService.getStudyPlanTaskMaterials(userId, classId, studyPlanId, taskId);
+    }
 }

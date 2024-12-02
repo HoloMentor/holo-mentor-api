@@ -3,9 +3,10 @@ package com.holomentor.holomentor.repositories;
 import com.holomentor.holomentor.models.CustomQuiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-// import java.util.M
+import java.util.Optional;
 
 @Repository
 public interface QuizRepository extends JpaRepository<CustomQuiz, Long> {
@@ -19,4 +20,6 @@ public interface QuizRepository extends JpaRepository<CustomQuiz, Long> {
             "AND ic.instituteId = :instituteId")
     long countQuizzes(Long teacherId, Long instituteId);
 
+
+    Optional<CustomQuiz> findById(Long id);
 }

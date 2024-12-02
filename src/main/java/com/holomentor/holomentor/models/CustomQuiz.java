@@ -6,6 +6,8 @@ import lombok.Data;
 import com.fasterxml.jackson.databind.JsonNode;
 // import com.holomentor.holomentor.controllers.Quiz;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -16,6 +18,7 @@ import org.hibernate.type.SqlTypes;
 //        user_id serial references users,
 //        mcq_question_ids jsonb not null,
 //        status int not null default 0,
+//        attempt_started_at timestamp,
 //        created_at timestamp default current_timestamp,
 //);
 
@@ -28,17 +31,27 @@ public class CustomQuiz {
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "quiz_name")
     private String quizName;
+
     @Column(name = "class_id")
     private Long classId;
+
     @Column(name = "user_id")
     private Long userId;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "mcq_question_ids", columnDefinition = "jsonb")
     private JsonNode mcqQuestionIds;
     private int status;
+
+    @Column(name = "attempt_started_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime attemptStartedAt;
+
     @Column(name = "created_at")
-    private String createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime createdAt;
 
 }

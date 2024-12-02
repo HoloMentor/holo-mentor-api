@@ -32,4 +32,7 @@ public interface InstituteClassStudentRepository extends JpaRepository<Institute
             "WHERE ic.instituteId = :instituteId AND ic.teacherId = :teacherId " +
             "GROUP BY ic.id, ic.className, ic.subjectId")
     List<InstituteClassStudentCountProjection> getClassStudentCounts(@Param("instituteId") Long instituteId,@Param("teacherId") Long teacherId);
+
+
+    InstituteClassStudent findByClassIdAndStudentId(Long classId, Long studentId);
 }
