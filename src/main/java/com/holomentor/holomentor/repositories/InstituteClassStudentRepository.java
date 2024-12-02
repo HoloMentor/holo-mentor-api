@@ -22,4 +22,7 @@ public interface InstituteClassStudentRepository extends JpaRepository<Institute
             "LEFT JOIN InstituteClassStudent ics ON ics.id = u.id "+
             "WHERE ics.classId = :classId " )
     Page<InstituteClassStudentProjection> findStudentsByClassId(Long classId, Pageable pageable);
+
+
+    InstituteClassStudent findByClassIdAndStudentId(Long classId, Long studentId);
 }
