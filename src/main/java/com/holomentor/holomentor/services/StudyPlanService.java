@@ -22,6 +22,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
@@ -248,6 +249,34 @@ public class StudyPlanService {
         } catch (Exception e) {
             return Response.generate("Error processing submission: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    public ResponseEntity<Object> getStudyPlanTaskMaterials(Long userId, Long classId, Long studyPlanId, Long taskId) {
+        // get the task
+        Optional<ClassTierStudyPlanTask> taskResult = classTierStudyPlanTaskRepository.findById(taskId);
+        if (taskResult.isEmpty())
+            return Response.generate("task not found", HttpStatus.NOT_FOUND);
+        // ClassTierStudyPlanTask task = taskResult.get();
+
+        // get student
+        InstituteClassStudent instituteClassStudent = instituteClassStudentRepository.findByClassIdAndStudentId(classId,
+                userId);
+        if (instituteClassStudent == null)
+            return Response.generate("student not found in the class", HttpStatus.NOT_FOUND);
+
+        // get study plan
+        Optional<ClassTierStudyPlan> studyPlanResult = classTierStudyPlanRepository.findById(studyPlanId);
+        if (studyPlanResult.isEmpty())
+            return Response.generate("study plan not found", HttpStatus.NOT_FOUND);
+        // ClassTierStudyPlan studyPlan = studyPlanResult.get();
+
+        // get submission
+        StudyPlanTaskSubmission submission = studyPlanTaskSubmissionRepository.findByTaskIdAndStudentId(taskId, userId);
+        if (submission == null)
+            return Response.generate("submission not found", HttpStatus.NOT_FOUND);
+
+        return Response.generate("study plan task submission", HttpStatus.OK, submission);
     }
 
 }

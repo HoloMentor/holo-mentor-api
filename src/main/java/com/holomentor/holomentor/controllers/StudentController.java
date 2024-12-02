@@ -61,4 +61,14 @@ public class StudentController {
             @RequestBody String materials) {
         return studyPlanService.submitStudyPlanTask(userId, classId, studyPlanId, taskId, materials);
     }
+
+    // students/study-plans/task/materials/${userId}/${classId}/${studyPlanId}/${taskId}
+    @GetMapping("/study-plans/task/materials/{userId}/{classId}/{studyPlanId}/{taskId}")
+    public ResponseEntity<Object> getStudyPlanTaskMaterials(
+            @PathVariable Long userId,
+            @PathVariable Long classId,
+            @PathVariable Long studyPlanId,
+            @PathVariable Long taskId) {
+        return studyPlanService.getStudyPlanTaskMaterials(userId, classId, studyPlanId, taskId);
+    }
 }
