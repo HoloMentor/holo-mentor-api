@@ -57,4 +57,9 @@ public class StudyPlanController {
     public ResponseEntity<Object> update(@PathVariable @Valid Long id, @RequestBody StudyPlanUpdateDTO body) {
         return studyPlanService.update(id, body);
     }
+
+    @GetMapping("/submissions/{studentId}/{studyPlaneId}")
+    public ResponseEntity<Object> getStudyPlanSubmissions(@Valid @PathVariable Long studentId, @Valid @PathVariable Long studyPlaneId) {
+        return studyPlanService.getStudyPlanSubmissions(studentId, studyPlaneId);
+    }
 }

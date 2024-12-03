@@ -71,4 +71,12 @@ public class StudentController {
             @PathVariable Long taskId) {
         return studyPlanService.getStudyPlanTaskMaterials(userId, classId, studyPlanId, taskId);
     }
+
+    @GetMapping("/all/class/{classId}")
+    public ResponseEntity<Object> getAllInstituteStudentClasses(
+            @PathVariable Long classId,
+            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "limit", defaultValue = "10") Integer pageSize) {
+        return studentService.getAllInstituteStudentClasses(classId, pageNo, pageSize);
+    }
 }
