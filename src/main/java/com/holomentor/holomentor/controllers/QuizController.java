@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/quiz")
 public class QuizController {
@@ -38,6 +39,12 @@ public class QuizController {
     public ResponseEntity<Object> startQuizAttempt(@PathVariable Long quiz_id, @PathVariable Long user_id)
             throws IOException {
         return quizService.startQuizAttempt(quiz_id, user_id);
+    }
+
+    // /quiz/${quizId}/${userId}/review
+    @PostMapping("/{quiz_id}/{user_id}/review")
+    public ResponseEntity<Object> reviewQuiz(@PathVariable Long quiz_id, @PathVariable Long user_id) {
+        return quizService.reviewQuiz(quiz_id, user_id);
     }
 
     @GetMapping("/question/{id}")
@@ -66,6 +73,13 @@ public class QuizController {
     public ResponseEntity<Object> reattemptQuiz(@PathVariable Long quiz_id, @PathVariable Long user_id) {
         return quizService.reattemptQuiz(quiz_id, user_id);
     }
+
+    // /quiz/${quizId}/${userId}/end-attempt`,
+    @GetMapping("/{quiz_id}/{user_id}/end-attempt")
+    public ResponseEntity<Object> endQuizAttempt(@PathVariable Long quiz_id, @PathVariable Long user_id) {
+        return quizService.endQuizAttempt(quiz_id, user_id);
+    }
+    
 
     // create quiz using ML model
     // http://localhost:8082/generate_quiz/${class_id}/${user_id}
