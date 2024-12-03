@@ -25,4 +25,9 @@ public class AnnouncementController {
     public ResponseEntity<Object> getAll(@PathVariable Long institute_id) {
         return announcementService.getAllbyInstituteId(institute_id);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        return announcementService.deleteById(id);
+    }
 }
