@@ -3,6 +3,7 @@ package com.holomentor.holomentor.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holomentor.holomentor.dto.forum.ForumQuestionCreateDTO;
+import com.holomentor.holomentor.dto.forum.ForumQuestionDTO;
 import com.holomentor.holomentor.models.ForumQuestion;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.repositories.ForumRepository;
@@ -69,6 +70,17 @@ public class ForumService {
         else return Response.generate("forum Question List", HttpStatus.OK, forumQuestions);
 
     }
+
+    public ResponseEntity<Object> getAll2() throws IOException{
+        List<ForumQuestionDTO> forumQuestions = forumRepository.findAllWithUserDetails();
+        if(forumQuestions.isEmpty()){
+            return Response.generate("No Questions to show", HttpStatus.NOT_FOUND);
+        }
+        else return Response.generate("forum Question List", HttpStatus.OK, forumQuestions);
+
+    }
+
+
 
 
     public ResponseEntity<Object> delete(Long id) throws IOException{

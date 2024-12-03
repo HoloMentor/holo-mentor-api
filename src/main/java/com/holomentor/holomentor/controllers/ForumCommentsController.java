@@ -20,11 +20,22 @@ public class ForumCommentsController {
 
     @PostMapping("/add")
     public ResponseEntity<Object> addComment(@Valid @RequestBody ForumCommentDTO body) throws IOException{
+        System.out.println(body);
         return forumCommentService.addComment(body);
     }
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<Object> deleteComment(@PathVariable @Valid Long id) throws IOException{
         return forumCommentService.deleteComment(id);
+    }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Object> getComments(@PathVariable @Valid Long id) throws IOException{
+//        return forumCommentService.getComments(id);
+//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getCommentsWithUsers(@PathVariable @Valid Long id) throws IOException{
+        return forumCommentService.getCommentsWithUsers(id);
     }
 }

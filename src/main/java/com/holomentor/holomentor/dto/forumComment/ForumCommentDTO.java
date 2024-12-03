@@ -12,5 +12,5 @@ public class ForumCommentDTO {
     @NotNull(message = "user Id is required")
     private Long userId;
     @NotNull(message = "Comment Text is required")
-    private JsonNode commentText;
+    private JsonNode reply;
 }
