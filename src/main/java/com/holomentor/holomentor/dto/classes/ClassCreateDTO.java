@@ -16,8 +16,6 @@ public class ClassCreateDTO {
     private Long subjectId;
     @NotNull(message = "teacher ID is required")
     private Long teacherId;
-    @NotNull(message = "institute teacher ID is required")
-    private Long instituteTeacherId;
     @NotNull(message = "start time is required")
     private Time startTime;
     @NotNull(message = "end time is required")
