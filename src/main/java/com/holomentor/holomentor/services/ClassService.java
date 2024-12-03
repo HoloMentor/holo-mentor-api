@@ -5,6 +5,7 @@ import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
 import com.holomentor.holomentor.repositories.InstituteClassRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
 import com.holomentor.holomentor.utils.Response;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional
@@ -97,5 +99,10 @@ public class ClassService {
     public ResponseEntity<Object> get(Long id) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
         return classResult.map(instituteClass -> Response.generate("class details", HttpStatus.OK, instituteClass)).orElseGet(() -> Response.generate("Class not found", HttpStatus.NOT_FOUND));
+    }
+
+    public ResponseEntity<Object> findByInstituteIdandTeacher(Long teacherId,Long instituteId) {
+        List<InstituteClassStudentCountProjection> studentCount = instituteClassRepository.findStudentCountByClass(teacherId,instituteId);
+        return Response.generate("students", HttpStatus.OK, studentCount);
     }
 }

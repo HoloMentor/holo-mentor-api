@@ -2,6 +2,7 @@ package com.holomentor.holomentor.repositories;
 
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
 import com.holomentor.holomentor.projections.student.InstituteStudentClassProjection;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,11 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "GROUP BY c.id, c.className, s.name, u.firstName, u.lastName")
     Page<InstituteStudentClassProjection> findClassesByStudentId(Long studentId, Pageable pageable);
 
-
-
+    @Query("SELECT ic.className AS className, COUNT(ics.studentId) AS studentCount " +
+            "FROM InstituteClassStudent ics " +
+            "JOIN InstituteClass ic ON ics.classId = ic.id " +
+            "WHERE ics.instituteId = :instituteId AND ic.teacherId = :teacherId " +
+            "GROUP BY ic.className")
+    List<InstituteClassStudentCountProjection> findStudentCountByClass(Long teacherId, Long instituteId);
 
 }
