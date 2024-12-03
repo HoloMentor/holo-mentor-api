@@ -103,7 +103,7 @@ public class TeacherService {
     public ResponseEntity<Object> getTeachersByInstituteId(Long instituteId, String search, Integer page, Integer size) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<InstituteTeacherProjection> teachers = userInstituteRepository.findByInstituteIdTeachersAndIsActive(search, instituteId, true, pageable);
+        Page<InstituteTeacherProjection> teachers = userInstituteRepository.findByInstituteIdTeachersAndIsActiveClassCount(search, instituteId, true, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", teachers.getTotalPages());
