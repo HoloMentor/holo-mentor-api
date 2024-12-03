@@ -8,11 +8,17 @@ import com.holomentor.holomentor.repositories.QuizRepository;
 import com.holomentor.holomentor.repositories.QuizQuestionRepository;
 import com.holomentor.holomentor.repositories.QuizAnswerRepository;
 // import com.holomentor.holomentor.repositories.*;
+
+import org.springframework.core.env.Environment;
+import org.springframework.web.client.RestTemplate;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -35,6 +41,9 @@ public class QuizService {
 
     @Autowired
     private QuizAnswerRepository quizAnswerRepository;
+
+    @Autowired
+    private Environment environment;
 
     public ResponseEntity<Object> getQuizzesByUserIdAndClassId(Long userId, Long classId) {
         List<CustomQuiz> quizzes = quizRepository.findByUserIdAndClassIdOrderByCreatedAtDesc(userId, classId);
@@ -195,4 +204,26 @@ public class QuizService {
 
         return Response.generate("Quiz status reset successfully", HttpStatus.OK, currentQuiz.getAttemptStartedAt());
     }
+
+    // create quiz using ML model
+    // http://localhost:8082/generate_quiz/${class_id}/${user_id}
+
+    public ResponseEntity<Object> generateQuiz(Long classId, Long userId) {
+        String url = String.format("%s/%s", environment.getProperty("env.holomentor.quiz_url"), "generate_quiz");
+
+        url = String.format("%s/%s/%s", url, classId, userId);
+        System.out.println(url);
+
+        // send a get request to the ml model
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            Object result = restTemplate.getForEntity(url, Object.class);
+            System.out.println(result);
+        } catch (Exception e) {
+            System.out.println(e);
+            return Response.generate("Failed to generate quiz", HttpStatus.BAD_REQUEST);
+        }
+        return Response.generate("Quiz generated successfully", HttpStatus.OK);
+    }
+
 }
