@@ -18,15 +18,11 @@ public class QuestionVoteController {
     private QuestionVoteService questionVoteService;
     @PostMapping("/{id}")
     public ResponseEntity<Object> castVote(@PathVariable("id") Long questionId, @RequestBody ForumVoteDTO body) throws IOException{
-        System.out.println(body);
+        System.out.println("\n\n\n"+ body + "\n\n\n");
         System.out.println(body.getVoteType());
         return questionVoteService.addorUpdateVote(questionId, body.getUserId(), body.getVoteType());
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getVoteCount(@PathVariable Long questionId ) throws IOException{
-        return ResponseEntity.ok("Nice Nice Hi Hi");
-    }
 
     @GetMapping("/{id}/all")
     public ResponseEntity<Object> getTotalVotesForQuestion(@PathVariable("id") Long questionId) {
