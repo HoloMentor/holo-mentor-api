@@ -106,4 +106,11 @@ public class QuizController {
         return quizService.reattemptQuiz(quiz_id, user_id);
     }
 
+    // create quiz using ML model
+    // http://localhost:8082/generate_quiz/${class_id}/${user_id}
+    @GetMapping("/generate-quiz/{class_id}/{user_id}")
+    public ResponseEntity<Object> generateQuiz(@PathVariable Long class_id, @PathVariable Long user_id) {
+        return quizService.generateQuiz(class_id, user_id);
+    }
+
 }
