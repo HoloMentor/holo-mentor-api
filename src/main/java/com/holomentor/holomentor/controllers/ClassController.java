@@ -51,5 +51,8 @@ public class ClassController {
         return classService.findByInstituteIdandTeacher(teacherId, instituteId);
     }
 
-
+    @GetMapping("/top-classes")
+    public ResponseEntity<Object> getTopClasses() {
+        return classService.topClasses();
+    }
 }

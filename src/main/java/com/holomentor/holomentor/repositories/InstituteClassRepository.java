@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.repositories;
 
 import com.holomentor.holomentor.models.InstituteClass;
+import com.holomentor.holomentor.projections.instituteClass.ClassDetailsProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherClassProjection;
@@ -74,5 +75,20 @@ public interface InstituteClassRepository extends JpaRepository<InstituteClass, 
             "WHERE ics.instituteId = :instituteId AND ic.teacherId = :teacherId " +
             "GROUP BY ic.className")
     List<InstituteClassStudentCountProjection> findStudentCountByClass(Long teacherId, Long instituteId);
+
+    @Query( "SELECT ic.id AS classId, " +
+            "       ic.className AS className, " +
+            "       t.firstName AS teacherFirstName, " +
+            "       t.lastName AS teacherLastName, " +
+            "       i.name AS instituteName, " +
+            "       COUNT(ics.id) AS studentCount " +
+            "FROM InstituteClass ic " +
+            "LEFT JOIN User t ON ic.teacherId = t.id " +
+            "LEFT JOIN Institute i ON ic.instituteId = i.id " +
+            "LEFT JOIN InstituteClassStudent ics ON ic.id = ics.classId " +
+            "GROUP BY ic.id, ic.className, t.firstName, t.lastName, i.name " +
+            "ORDER BY studentCount DESC")
+    List<ClassDetailsProjection> getAllClassesWithTeacherInstituteAndStudentCount();
+
 
 }

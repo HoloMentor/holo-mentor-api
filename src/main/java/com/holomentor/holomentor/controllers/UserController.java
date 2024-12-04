@@ -49,4 +49,9 @@ public class  UserController {
     public ResponseEntity<Object> suspend(@PathVariable @Valid Long id, @RequestBody UserSuspendDTO body){
         return userService.suspend(id, body);
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Object> stats(){
+        return userService.getStats();
+    }
 }

@@ -5,6 +5,7 @@ import com.holomentor.holomentor.dto.user.UserUpdateDTO;
 import com.holomentor.holomentor.dto.user.UserUpdateInfoDTO;
 import com.holomentor.holomentor.models.Institute;
 import com.holomentor.holomentor.models.User;
+import com.holomentor.holomentor.projections.SystemStatsProjection;
 import com.holomentor.holomentor.projections.user.UserProjection;
 import com.holomentor.holomentor.repositories.UserRepository;
 import com.holomentor.holomentor.utils.Response;
@@ -107,5 +108,11 @@ public class UserService {
         userRepository.save(user);
 
         return Response.generate("user account deleted", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> getStats() {
+        SystemStatsProjection systemStatsProjection = userRepository.findAllStats();
+
+        return Response.generate("system statistic details found", HttpStatus.OK, systemStatsProjection);
     }
 }

@@ -4,6 +4,7 @@ import com.holomentor.holomentor.dto.classes.ClassCreateDTO;
 import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.models.UserInstitute;
+import com.holomentor.holomentor.projections.instituteClass.ClassDetailsProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
 import com.holomentor.holomentor.repositories.InstituteClassRepository;
@@ -104,5 +105,10 @@ public class ClassService {
     public ResponseEntity<Object> findByInstituteIdandTeacher(Long teacherId,Long instituteId) {
         List<InstituteClassStudentCountProjection> studentCount = instituteClassRepository.findStudentCountByClass(teacherId,instituteId);
         return Response.generate("students", HttpStatus.OK, studentCount);
+    }
+
+    public ResponseEntity<Object> topClasses() {
+        List<ClassDetailsProjection> classResult = instituteClassRepository.getAllClassesWithTeacherInstituteAndStudentCount();
+        return Response.generate("class details fount", HttpStatus.OK, classResult);
     }
 }

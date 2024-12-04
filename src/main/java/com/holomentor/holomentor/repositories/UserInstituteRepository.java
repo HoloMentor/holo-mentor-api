@@ -2,6 +2,7 @@ package com.holomentor.holomentor.repositories;
 
 import com.holomentor.holomentor.models.User;
 import com.holomentor.holomentor.models.UserInstitute;
+import com.holomentor.holomentor.projections.SystemStatsProjection;
 import com.holomentor.holomentor.projections.teacher.InstituteTeacherProjection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,6 +53,4 @@ public interface UserInstituteRepository extends JpaRepository<UserInstitute, Lo
             @Param("instituteId") Long instituteId,
             @Param("isActive") Boolean isActive,
             Pageable pageable);
-
-
 }
