@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -93,6 +94,18 @@ public class QuizService {
 
         return Response.generate("Quiz attempt started successfully", HttpStatus.OK,
                 quizToUpdate.getAttemptStartedAt());
+    }
+
+    public ResponseEntity<Object> reviewQuiz(Long quizId, Long userId) {
+        Optional<CustomQuiz> quiz = quizRepository.findById(quizId);
+        if (!quiz.isPresent())
+            return Response.generate("Quiz not found", HttpStatus.NOT_FOUND);
+
+        CustomQuiz currentQuiz = quiz.get();
+        // if (currentQuiz.getStatus() == 0)
+        //     return Response.generate("Quiz not started", HttpStatus.BAD_REQUEST);
+
+        return Response.generate("Quiz review started successfully", HttpStatus.OK, currentQuiz.getAttemptStartedAt());
     }
 
     @Transactional
@@ -210,6 +223,19 @@ public class QuizService {
         quizRepository.save(currentQuiz);
 
         return Response.generate("Quiz status reset successfully", HttpStatus.OK, currentQuiz.getAttemptStartedAt());
+    }
+
+    public ResponseEntity<Object> endQuizAttempt(Long quizId, Long userId) {
+        Optional<CustomQuiz> quiz = quizRepository.findById(quizId);
+        if (!quiz.isPresent())
+            return Response.generate("Quiz not found", HttpStatus.NOT_FOUND);
+
+        CustomQuiz currentQuiz = quiz.get();
+        currentQuiz.setAttemptStartedAt(LocalDateTime.now().minusMinutes(45));
+        currentQuiz.setStatus(2);
+        quizRepository.save(currentQuiz);
+
+        return Response.generate("Quiz attempt ended successfully", HttpStatus.OK);
     }
 
     // create quiz using ML model
