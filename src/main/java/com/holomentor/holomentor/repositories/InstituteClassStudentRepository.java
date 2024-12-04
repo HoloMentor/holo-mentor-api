@@ -19,7 +19,7 @@ import java.util.List;
 public interface InstituteClassStudentRepository extends JpaRepository<InstituteClassStudent, Long> {
     List<InstituteClassStudent> findByClassId(Long classId);
 
-    @Query("select u.id as id , u.firstName as firstName, u.lastName as lastName "+
+    @Query("select u.id as id , u.firstName as firstName, u.lastName as lastName, u.email as email "+
             "FROM User u "+
             "LEFT JOIN InstituteClassStudent ics ON ics.id = u.id "+
             "WHERE ics.classId = :classId " )
