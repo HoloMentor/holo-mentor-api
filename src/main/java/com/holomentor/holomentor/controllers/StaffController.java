@@ -31,6 +31,15 @@ public class StaffController {
         return (ResponseEntity<Object>) staffService.get(id);
     }
 
+    @GetMapping("/teacher/{userId}/{instituteId}")
+    public ResponseEntity<Object> get(@PathVariable @Valid Long userId, @Valid @PathVariable Long instituteId) {
+        return (ResponseEntity<Object>) staffService.getTeacherData(userId,instituteId);
+    }
+    @GetMapping("/teacher/count/{userId}/{instituteId}")
+    public ResponseEntity<Object> getTeacherStaffCount(@PathVariable @Valid Long userId, @Valid @PathVariable Long instituteId) {
+        return (ResponseEntity<Object>) staffService.getTeacherStaffCount(userId,instituteId);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Object> createStaff(@Valid @RequestBody StaffCreateDTO body) throws IOException {
         return staffService.create(body);

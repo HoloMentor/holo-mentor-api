@@ -30,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Time;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -277,6 +274,31 @@ public class StudyPlanService {
             return Response.generate("submission not found", HttpStatus.NOT_FOUND);
 
         return Response.generate("study plan task submission", HttpStatus.OK, submission);
+    }
+
+    public ResponseEntity<Object> getStudyPlanSubmissions(Long studentId , Long studyPlaneId){
+
+        List<Object[]> submissions = studyPlanTaskSubmissionRepository.findStudyPlanTaskSubmission(studentId, studyPlaneId);
+
+        // Process data into a structured response format
+        List<Map<String, Object>> responseData = new ArrayList<>();
+        for (Object[] submission : submissions) {
+            Map<String, Object> submissionData = new HashMap<>();
+            submissionData.put("taskId", submission[0]);
+            submissionData.put("taskTitle", submission[1]);
+            submissionData.put("taskDescription", submission[2]);
+            submissionData.put("taskCreatedAt", submission[3]);
+            submissionData.put("submissionId", submission[4]);
+            submissionData.put("submissionData", submission[5]);
+            responseData.add(submissionData);
+        }
+
+        // Construct the response
+        Map<String, Object> data = new HashMap<>();
+        data.put("totalTasks", responseData.size());
+        data.put("submissions", responseData);
+
+        return Response.generate("Study plan submissions retrieved successfully", HttpStatus.OK, data);
     }
 
 }

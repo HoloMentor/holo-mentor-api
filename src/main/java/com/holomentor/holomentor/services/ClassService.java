@@ -17,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
+import com.holomentor.holomentor.repositories.InstituteClassStudentRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
@@ -31,6 +34,8 @@ public class ClassService {
     private InstituteClassRepository instituteClassRepository;
     @Autowired
     private UserInstituteRepository userInstituteRepository;
+    @Autowired
+    private InstituteClassStudentRepository instituteClassStudentRepository;
 
     public ResponseEntity<Object> create(ClassCreateDTO body) {
 
@@ -99,6 +104,12 @@ public class ClassService {
     public ResponseEntity<Object> get(Long id) {
         Optional<InstituteClass> classResult = instituteClassRepository.findById(id);
         return classResult.map(instituteClass -> Response.generate("class details", HttpStatus.OK, instituteClass)).orElseGet(() -> Response.generate("Class not found", HttpStatus.NOT_FOUND));
+    }
+
+    public ResponseEntity<Object>getClassStudentStat(Long instituteId , Long teacherId){
+        List<InstituteClassStudentCountProjection> results = instituteClassStudentRepository.getClassStudentCounts(instituteId,teacherId);
+        System.out.println("Result - " + results);
+        return Response.generate("Class Student Stats", HttpStatus.OK, results);
     }
 
     public ResponseEntity<Object> findByInstituteIdandTeacher(Long teacherId,Long instituteId) {
