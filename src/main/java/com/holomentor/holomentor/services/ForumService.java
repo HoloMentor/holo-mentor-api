@@ -102,9 +102,12 @@ public class ForumService {
         forumQuestionUpdate.setClassId(body.getClassId());
         forumQuestionUpdate.setTopic(body.getTopic());
         forumQuestionUpdate.setSubTopic(body.getSubTopic());
+        forumQuestionUpdate.setQuestion(body.getQuestion());
+        System.out.println("\n\n"+body.getQuestion());
         forumQuestionUpdate.setUserId(body.getUserId());
         forumQuestionUpdate.setMcqAnswer(body.getAnswers());
         forumQuestionUpdate.setVoteCount(body.getVoteCount());
+        System.out.println("\n\n\n"+forumQuestionUpdate+"\n\n\nend");
 
         forumRepository.save(forumQuestionUpdate);
         return Response.generate("Mcq updated succesfully", HttpStatus.OK);

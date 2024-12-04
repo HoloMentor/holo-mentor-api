@@ -83,6 +83,7 @@ public class AuthService {
             user.setLastName(env.getProperty("env.super.last_name"));
             user.setEmail(env.getProperty("env.super.email"));
             user.setRole(User.RoleTypes.SUPER_ADMIN);
+            user.setIsDeleted(false);
             user.setPassword(passwordEncoder.encode(env.getProperty("env.super.password")));
             userRepository.save(user);
 
