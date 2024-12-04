@@ -5,4 +5,6 @@ public interface InstituteClassStudentProjection {
     String getFirstName();
     String getLastName();
     String getEmail();
+    Integer getTier();
+
 }
