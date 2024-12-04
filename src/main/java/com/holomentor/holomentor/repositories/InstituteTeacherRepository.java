@@ -12,8 +12,8 @@ public interface InstituteTeacherRepository extends JpaRepository<UserInstitute,
 
     @Query("select COUNT(DISTINCT ic.id) as classCount, " +
             "COUNT(DISTINCT ics.studentId) as studentCount " +
-            "FROM InstituteClass ic " +
-            "LEFT JOIN InstituteClassStudent ics ON ics.classId = ic.id " +
+            "FROM  InstituteClassStudent ics " +
+            "LEFT JOIN InstituteClass ic ON ics.classId = ic.id " +
             "WHERE ic.teacherId = :teacherId ")
     InstituteTeacherStatProjection findTeacherStatsById(Long teacherId);
 }

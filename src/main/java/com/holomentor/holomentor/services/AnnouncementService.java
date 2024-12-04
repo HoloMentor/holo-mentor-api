@@ -37,4 +37,9 @@ public class AnnouncementService {
         List<InstituteAnnouncement> announcements = announcementRepository.findByInstituteIdOrderByIdDesc(instituteId);
         return Response.generate("announcements found.", HttpStatus.OK, announcements);
     }
+
+    public ResponseEntity<Object> deleteById(Long id){
+        announcementRepository.deleteById(id);
+        return Response.generate("announcement deleted successfully.", HttpStatus.OK);
+    }
 }

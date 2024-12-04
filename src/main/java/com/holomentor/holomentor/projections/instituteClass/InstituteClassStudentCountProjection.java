@@ -6,4 +6,5 @@ public interface InstituteClassStudentCountProjection {
     String getClassName();
     Long getSubjectId();
     Long getStudentCount();
+
 }

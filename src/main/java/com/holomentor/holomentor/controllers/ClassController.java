@@ -52,4 +52,10 @@ public class ClassController {
     }
 
 
+    @GetMapping("/teacher/{teacherId}/institute/{instituteId}")
+    public ResponseEntity<Object> getByTeacherId(@PathVariable Long teacherId, @PathVariable Long instituteId) {
+        return classService.findByInstituteIdandTeacher(teacherId, instituteId);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.holomentor.holomentor.dto.classes.ClassUpdateDTO;
 import com.holomentor.holomentor.models.InstituteClass;
 import com.holomentor.holomentor.models.UserInstitute;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
+import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentCountProjection;
 import com.holomentor.holomentor.repositories.InstituteClassRepository;
 import com.holomentor.holomentor.repositories.UserInstituteRepository;
 import com.holomentor.holomentor.utils.Response;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional
@@ -108,5 +110,10 @@ public class ClassService {
         List<InstituteClassStudentCountProjection> results = instituteClassStudentRepository.getClassStudentCounts(instituteId,teacherId);
         System.out.println("Result - " + results);
         return Response.generate("Class Student Stats", HttpStatus.OK, results);
+    }
+
+    public ResponseEntity<Object> findByInstituteIdandTeacher(Long teacherId,Long instituteId) {
+        List<InstituteClassStudentCountProjection> studentCount = instituteClassRepository.findStudentCountByClass(teacherId,instituteId);
+        return Response.generate("students", HttpStatus.OK, studentCount);
     }
 }
