@@ -24,7 +24,7 @@ public class ForumController {
     }
 
 
-    @PatchMapping({"/{id}/update/mcq", "/{id}/update/essay"})
+    @PatchMapping({"/{id}/update/mcq", "/{id}/update/normal"})
     public ResponseEntity<Object> updateMcq(@PathVariable @Valid Long id, @RequestBody ForumQuestionCreateDTO body) throws IOException{
         return forumService.updateMcq(id, body);
     }
