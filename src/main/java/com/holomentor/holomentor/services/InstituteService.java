@@ -3,6 +3,7 @@ package com.holomentor.holomentor.services;
 import com.holomentor.holomentor.dto.institute.InstituteCreateDTO;
 import com.holomentor.holomentor.dto.institute.InstituteUpdateDTO;
 import com.holomentor.holomentor.models.*;
+import com.holomentor.holomentor.projections.institute.InstituteDetailsProjection;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassProjection;
 import com.holomentor.holomentor.repositories.*;
 import com.holomentor.holomentor.utils.Response;
@@ -105,7 +106,7 @@ public class InstituteService {
         HashMap<String, String> dynamicData = new HashMap<>();
         String redirectLink = String.format("%sinvitation?token=%s&reset=%s", environment.getProperty("env.holomentor.client_url"), invitationToken, userExists.isEmpty());
         dynamicData.put("redirect_link", redirectLink);
-
+        System.out.println(adminUser.getEmail());
 //        send mail to the user account
         mailService.sendMail(
                 SendGridMail.TemplateNames.INSTITUTE_REGISTRATION,
@@ -128,7 +129,7 @@ public class InstituteService {
 
     public ResponseEntity<Object> getAll(String search, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Institute> institutes= instituteRepository.findByNameContainingIgnoreCaseAndIsDeleted(search, false, pageable);
+        Page<InstituteDetailsProjection> institutes = instituteRepository.getInstituteDetailsByNameAndIsDeleted(search, false, pageable);
 
         Map<String, Object> data = new HashMap<>();
         data.put("pages", institutes.getTotalPages());
