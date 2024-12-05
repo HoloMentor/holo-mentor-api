@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/quiz")
 public class QuizController {
@@ -34,10 +35,55 @@ public class QuizController {
         return quizService.getQuizzesByUserIdAndClassId(user_id, class_id);
     }
 
+    @GetMapping("/count/{user_id}/{class_id}")
+    public ResponseEntity<Object> getQuizStats(@PathVariable Long user_id,
+                                               @PathVariable Long class_id) {
+        return quizService.getQuizStats(user_id,class_id);
+    }
+
+
+    // @SuppressWarnings("null")
+    // @GetMapping("{class_id}/{user_id}/get_quizzes")
+    // public ResponseEntity<Object> getQuizzesNew(@PathVariable Long class_id, @PathVariable Long user_id) {
+    //     Logger logger = null;
+    //     logger.info("Fetching quizzes for user {} in class {}", user_id, class_id);
+        
+    //     if (class_id <= 0 || user_id <= 0) {
+    //         logger.error("Invalid class_id or user_id provided");
+    //         return ResponseEntity.badRequest().body("Invalid parameters");
+    //     }
+
+    //     LocalDateTime requestTime = LocalDateTime.now();
+    //     ResponseEntity<Object> quizzes = quizService.getQuizzesByUserIdAndClassId(user_id, class_id);
+        
+    //     if (quizzes.getBody() instanceof List<?>) {
+    //         List<?> quizList = (List<?>) quizzes.getBody();
+            
+    //         Map<String, Object> enrichedResponse = Map.of(
+    //             "quizzes", quizList,
+    //             "totalCount", quizList.size(),
+    //             "fetchedAt", requestTime
+    //             // "metrics", Map.of(
+    //             //     "activeQuizzes", quizList.stream().filter(q -> isActiveQuiz(q)).count(),
+    //             //     "completedQuizzes", quizList.stream().filter(q -> isCompletedQuiz(q)).count()
+    //             // )
+    //         );
+            
+    //         return ResponseEntity.ok(enrichedResponse);
+    //     }
+        
+    //     return quizzes;
+    // }
     @PostMapping("/{quiz_id}/{user_id}/start-attempt")
     public ResponseEntity<Object> startQuizAttempt(@PathVariable Long quiz_id, @PathVariable Long user_id)
             throws IOException {
         return quizService.startQuizAttempt(quiz_id, user_id);
+    }
+
+    // /quiz/${quizId}/${userId}/review
+    @PostMapping("/{quiz_id}/{user_id}/review")
+    public ResponseEntity<Object> reviewQuiz(@PathVariable Long quiz_id, @PathVariable Long user_id) {
+        return quizService.reviewQuiz(quiz_id, user_id);
     }
 
     @GetMapping("/question/{id}")
@@ -66,6 +112,13 @@ public class QuizController {
     public ResponseEntity<Object> reattemptQuiz(@PathVariable Long quiz_id, @PathVariable Long user_id) {
         return quizService.reattemptQuiz(quiz_id, user_id);
     }
+
+    // /quiz/${quizId}/${userId}/end-attempt`,
+    @GetMapping("/{quiz_id}/{user_id}/end-attempt")
+    public ResponseEntity<Object> endQuizAttempt(@PathVariable Long quiz_id, @PathVariable Long user_id) {
+        return quizService.endQuizAttempt(quiz_id, user_id);
+    }
+    
 
     // create quiz using ML model
     // http://localhost:8082/generate_quiz/${class_id}/${user_id}

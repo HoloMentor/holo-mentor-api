@@ -21,4 +21,5 @@ public class InstituteClassTierStudent {
     private Long studentId;
     @Column(insertable = false, updatable = false)
     private Time createdAt;
+    private String tier;
 }

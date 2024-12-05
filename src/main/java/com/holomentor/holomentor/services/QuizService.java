@@ -2,6 +2,8 @@ package com.holomentor.holomentor.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.holomentor.holomentor.models.CustomQuiz;
+import com.holomentor.holomentor.repositories.*;
+import com.holomentor.holomentor.utils.Response;
 import com.holomentor.holomentor.models.QuizAnswer;
 import com.holomentor.holomentor.models.QuizQuestion;
 import com.holomentor.holomentor.repositories.QuizRepository;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -48,6 +51,11 @@ public class QuizService {
     public ResponseEntity<Object> getQuizzesByUserIdAndClassId(Long userId, Long classId) {
         List<CustomQuiz> quizzes = quizRepository.findByUserIdAndClassIdOrderByCreatedAtDesc(userId, classId);
         return ResponseEntity.ok(quizzes);
+    }
+
+    public ResponseEntity<Object> getQuizStats(Long user_id , Long institute_id) {
+        long quizCount = quizRepository.countQuizzes(user_id , institute_id);
+        return Response.generate("quiz statistics are found", HttpStatus.OK, quizCount);
     }
 
     public ResponseEntity<Object> startQuizAttempt(Long quizId, Long userId) throws IOException {
@@ -86,6 +94,18 @@ public class QuizService {
 
         return Response.generate("Quiz attempt started successfully", HttpStatus.OK,
                 quizToUpdate.getAttemptStartedAt());
+    }
+
+    public ResponseEntity<Object> reviewQuiz(Long quizId, Long userId) {
+        Optional<CustomQuiz> quiz = quizRepository.findById(quizId);
+        if (!quiz.isPresent())
+            return Response.generate("Quiz not found", HttpStatus.NOT_FOUND);
+
+        CustomQuiz currentQuiz = quiz.get();
+        // if (currentQuiz.getStatus() == 0)
+        //     return Response.generate("Quiz not started", HttpStatus.BAD_REQUEST);
+
+        return Response.generate("Quiz review started successfully", HttpStatus.OK, currentQuiz.getAttemptStartedAt());
     }
 
     @Transactional
@@ -203,6 +223,19 @@ public class QuizService {
         quizRepository.save(currentQuiz);
 
         return Response.generate("Quiz status reset successfully", HttpStatus.OK, currentQuiz.getAttemptStartedAt());
+    }
+
+    public ResponseEntity<Object> endQuizAttempt(Long quizId, Long userId) {
+        Optional<CustomQuiz> quiz = quizRepository.findById(quizId);
+        if (!quiz.isPresent())
+            return Response.generate("Quiz not found", HttpStatus.NOT_FOUND);
+
+        CustomQuiz currentQuiz = quiz.get();
+        currentQuiz.setAttemptStartedAt(LocalDateTime.now().minusMinutes(45));
+        currentQuiz.setStatus(2);
+        quizRepository.save(currentQuiz);
+
+        return Response.generate("Quiz attempt ended successfully", HttpStatus.OK);
     }
 
     // create quiz using ML model

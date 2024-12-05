@@ -36,7 +36,6 @@ public class InstituteClassStudent {
     private String registrationNumber;
     @Column(insertable = false, updatable = false)
     private String createdAt;
-
     private Integer tier;
 }
 

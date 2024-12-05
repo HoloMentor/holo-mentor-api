@@ -1,6 +1,7 @@
 package com.holomentor.holomentor.services;
 
 import com.holomentor.holomentor.dto.student.StudentCreateDTO;
+import com.holomentor.holomentor.dto.student.StudentTierDTO;
 import com.holomentor.holomentor.models.*;
 import com.holomentor.holomentor.projections.instituteClass.InstituteClassStudentProjection;
 import com.holomentor.holomentor.projections.subject.InstituteSubjectProjection;
@@ -42,6 +43,7 @@ public class StudentService {
     private UserInvitationRepository userInvitationRepository;
     @Autowired
     private InstituteClassStudentRepository instituteClassStudentRepository;
+
 
 
     public ResponseEntity<Object> create(StudentCreateDTO body) throws IOException {
@@ -116,6 +118,27 @@ public class StudentService {
 
         return Response.generate("teacher's classes", HttpStatus.OK, data);
     }
+
+    public ResponseEntity<Object> getAllInstituteStudentClasses(Long classId, Integer page, Integer size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<InstituteClassStudentProjection>  instituteClassStudents = instituteClassStudentRepository.finAllStudentsByClassId(classId, pageable);
+
+
+        //data
+        Map<String, Object> data = new HashMap<>();
+        data.put("pages", instituteClassStudents.getTotalPages());
+        data.put("totalElements", instituteClassStudents.getTotalElements());
+        data.put("currentPage", page);
+        data.put("data", instituteClassStudents.getContent());
+
+        // Return the response with a custom success message
+        return Response.generate("Students in the class retrieved successfully", HttpStatus.OK, data);
+    }
+
+
+
 
 
 }
