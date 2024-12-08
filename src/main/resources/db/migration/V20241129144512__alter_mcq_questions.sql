@@ -1,2 +1,0 @@
--- ALTER TABLE mcq_questions
--- ADD COLUMN activation INTEGER DEFAULT 0 NOT NULL;
